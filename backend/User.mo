@@ -2,6 +2,7 @@ import Text "mo:base/Text";
 import Trie "mo:base/Trie";
 import Nat32 "mo:base/Nat32";
 import Iter "mo:base/Iter";
+import Option "mo:base/Option";
 actor User {
 
   public type UserId = Nat32;
@@ -28,14 +29,46 @@ actor User {
     return user_id;
   };
 
-  public func read(user_id : UserId) : async ?Users {
+  public query func read(user_id : UserId) : async ?Users {
     let result = Trie.find(users, key(user_id), Nat32.equal);
     return result;
   };
 
-  public func readAll() : async [(UserId, Users)] {
+  public query func readAll() : async [(UserId, Users)] {
     let resultAllData = Iter.toArray(Trie.iter(users));
     return resultAllData;
+  };
+
+  public func update(user_id: UserId, userinput: Users) : async Bool {
+    let resultUser = Trie.find(users, key(user_id), Nat32.equal);
+
+    let data = Option.isSome(resultUser);
+
+    if(data){
+      users := Trie.replace(
+      users,
+      key(user_id),
+      Nat32.equal,
+      ?userinput,
+    ).0;
+    };
+    return data;
+  };
+
+  public func delete(user_id: UserId) : async Bool {
+    let resultUser = Trie.find(users, key(user_id), Nat32.equal);
+
+    let data = Option.isSome(resultUser);
+
+    if(data){
+      users := Trie.replace(
+      users,
+      key(user_id),
+      Nat32.equal,
+      null,
+    ).0;
+    };
+    return data;
   };
 
   private func key(x : UserId) : Trie.Key<UserId> {
