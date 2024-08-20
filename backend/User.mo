@@ -1,6 +1,7 @@
 import Text "mo:base/Text";
 import Trie "mo:base/Trie";
 import Nat32 "mo:base/Nat32";
+import Iter "mo:base/Iter";
 actor User {
 
   public type UserId = Nat32;
@@ -30,6 +31,11 @@ actor User {
   public func read(user_id : UserId) : async ?Users {
     let result = Trie.find(users, key(user_id), Nat32.equal);
     return result;
+  };
+
+  public func readAll() : async [(UserId, Users)] {
+    let resultAllData = Iter.toArray(Trie.iter(users));
+    return resultAllData;
   };
 
   private func key(x : UserId) : Trie.Key<UserId> {
