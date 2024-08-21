@@ -1,11 +1,10 @@
 import Text "mo:base/Text";
 import Trie "mo:base/Trie";
-import Nat32 "mo:base/Nat32";
 import Iter "mo:base/Iter";
 import Option "mo:base/Option";
 actor User {
 
-  public type UserId = Nat32;
+  public type UserId = Text;
 
   public type Users = {
     username : Text;
@@ -13,17 +12,15 @@ actor User {
     password : Text;
   };
 
-  private stable var id : UserId = 0;
-
   private stable var users : Trie.Trie<UserId, Users> = Trie.empty();
 
   public func createUser(user : Users) : async UserId {
-    let user_id = id;
-    id += 1;
+    let user_id = user.email;
+
     users := Trie.replace(
       users,
       key(user_id),
-      Nat32.equal,
+      Text.equal,
       ?user,
     ).0;
 
@@ -31,7 +28,7 @@ actor User {
   };
 
   public query func read(user_id : UserId) : async ?Users {
-    let result = Trie.find(users, key(user_id), Nat32.equal);
+    let result = Trie.find(users, key(user_id), Text.equal);
     return result;
   };
 
@@ -41,7 +38,7 @@ actor User {
   };
 
   public func update(user_id : UserId, userinput : Users) : async Bool {
-    let resultUser = Trie.find(users, key(user_id), Nat32.equal);
+    let resultUser = Trie.find(users, key(user_id), Text.equal);
 
     let data = Option.isSome(resultUser);
 
@@ -49,7 +46,7 @@ actor User {
       users := Trie.replace(
         users,
         key(user_id),
-        Nat32.equal,
+        Text.equal,
         ?userinput,
       ).0;
     };
@@ -57,7 +54,7 @@ actor User {
   };
 
   public func delete(user_id : UserId) : async Bool {
-    let resultUser = Trie.find(users, key(user_id), Nat32.equal);
+    let resultUser = Trie.find(users, key(user_id), Text.equal);
 
     let data = Option.isSome(resultUser);
 
@@ -65,15 +62,15 @@ actor User {
       users := Trie.replace(
         users,
         key(user_id),
-        Nat32.equal,
+        Text.equal,
         null,
       ).0;
     };
     return data;
   };
 
-  private func key(x : UserId) : Trie.Key<UserId> {
-    return { hash = x; key = x };
+  private func key(t : UserId) : Trie.Key<UserId> {
+    return { hash = Text.hash t; key = t };
   };
 
 };
