@@ -1,21 +1,65 @@
+import { useEffect, useState } from 'react';
 import './App.css';
 import motokoLogo from './assets/motoko_moving.png';
 import motokoShadowLogo from './assets/motoko_shadow.png';
 import reactLogo from './assets/react.svg';
 import viteLogo from './assets/vite.svg';
+import { idlFactory, canisterId } from './declarations/backend'
+import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
 
+interface Users {
+  email: string;
+  username: string;
+}
+
 function App() {
-  const { data: count, call: refetchCount } = useQueryCall({
-    functionName: 'get',
+  const [greeting, setGreeting] = useState<string>('');
+  const [username, setUsername] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
+  const [users, setUsers] = useState<Users[]>([]);
+
+  const agent = new HttpAgent({ host: 'http://localhost:4943' });
+  agent.fetchRootKey(); // Remove this in production
+
+  const canister = Actor.createActor(idlFactory, {
+    agent,
+    canisterId,
   });
 
-  const { call: increment, loading } = useUpdateCall({
-    functionName: 'inc',
-    onSuccess: () => {
-      refetchCount();
-    },
-  });
+  async function readUser(userId: any) {
+    const user = await canister.read(userId);
+    console.log('User data:', user);
+  }
+
+  async function readAllUser() {
+    const users = await canister.readAll() as Users[];
+    console.log(users);
+    setUsers(users);
+  }
+
+  async function createUser() {
+    await canister.createUser({ username: username, email: email });
+  }
+
+  useEffect(() => {
+    // idlFactory.readAll().then((greeting: any) => {
+    //   console.log(greeting);
+    //   setGreeting(greeting);
+    // });
+    readUser(0);
+  }, []);
+
+  // const { data: count, call: refetchCount } = useQueryCall({
+  //   functionName: 'get',
+  // });
+
+  // const { call: increment, loading } = useUpdateCall({
+  //   functionName: 'inc',
+  //   onSuccess: () => {
+  //     refetchCount();
+  //   },
+  // });
 
   return (
     <div className="App">
@@ -41,13 +85,23 @@ function App() {
         </a>
       </div>
       <h1>Vite + React + Motoko</h1>
+      <div>
+        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <button onClick={() => createUser()}>Submit</button>
+        <button onClick={() => readAllUser()}>Refetch users</button>
+      </div>
       <div className="card">
-        <button onClick={increment} disabled={loading}>
+        {/* <button onClick={increment} disabled={loading}>
           count is {count?.toString() ?? 'loading...'}
-        </button>
-        <p>
-          Edit <code>backend/Backend.mo</code> and save to test HMR
-        </p>
+        </button> */}
+        {users.map((value: any, index: number) => {
+          return (
+            <div key={index}>
+              {value[1].username}, {value[1].email}
+            </div>
+          );
+        })};
       </div>
       <p className="read-the-docs">
         Click on the Vite, React, and Motoko logos to learn more
