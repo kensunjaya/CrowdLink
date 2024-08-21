@@ -62,34 +62,12 @@ function App() {
   // });
 
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <a
-          href="https://internetcomputer.org/docs/current/developer-docs/build/cdks/motoko-dfinity/motoko/"
-          target="_blank"
-        >
-          <span className="logo-stack">
-            <img
-              src={motokoShadowLogo}
-              className="logo motoko-shadow"
-              alt="Motoko logo"
-            />
-            <img src={motokoLogo} className="logo motoko" alt="Motoko logo" />
-          </span>
-        </a>
-      </div>
-      <h1>Vite + React + Motoko</h1>
-      <div>
-        <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-        <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <button onClick={() => createUser()}>Submit</button>
-        <button onClick={() => readAllUser()}>Refetch users</button>
+    <div className="w-full min-h-screen bg-white">
+      <div className="flex flex-col space-y-2">
+        <input placeholder="username" className="py-1 px-3 border border-black rounded-md" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+        <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => createUser()}>Submit</button>
+        <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => readAllUser()}>Refetch users</button>
       </div>
       <div className="card">
         {/* <button onClick={increment} disabled={loading}>
@@ -101,7 +79,7 @@ function App() {
               {value[1].username}, {value[1].email}
             </div>
           );
-        })};
+        })}
       </div>
       <p className="read-the-docs">
         Click on the Vite, React, and Motoko logos to learn more
