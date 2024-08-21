@@ -10,6 +10,7 @@ actor User {
   public type Users = {
     username : Text;
     email : Text;
+    password : Text;
   };
 
   private stable var id : UserId = 0;
@@ -39,34 +40,34 @@ actor User {
     return resultAllData;
   };
 
-  public func update(user_id: UserId, userinput: Users) : async Bool {
+  public func update(user_id : UserId, userinput : Users) : async Bool {
     let resultUser = Trie.find(users, key(user_id), Nat32.equal);
 
     let data = Option.isSome(resultUser);
 
-    if(data){
+    if (data) {
       users := Trie.replace(
-      users,
-      key(user_id),
-      Nat32.equal,
-      ?userinput,
-    ).0;
+        users,
+        key(user_id),
+        Nat32.equal,
+        ?userinput,
+      ).0;
     };
     return data;
   };
 
-  public func delete(user_id: UserId) : async Bool {
+  public func delete(user_id : UserId) : async Bool {
     let resultUser = Trie.find(users, key(user_id), Nat32.equal);
 
     let data = Option.isSome(resultUser);
 
-    if(data){
+    if (data) {
       users := Trie.replace(
-      users,
-      key(user_id),
-      Nat32.equal,
-      null,
-    ).0;
+        users,
+        key(user_id),
+        Nat32.equal,
+        null,
+      ).0;
     };
     return data;
   };
