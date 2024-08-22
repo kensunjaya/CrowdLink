@@ -16,6 +16,7 @@ import CampaignCard from './components/Card/CampaignCard';
 import Register from './components/Register';
 import Login from './components/Login';
 import Footer from './components/Footer';
+import Wallet from './components/Wallet';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 
@@ -107,6 +108,7 @@ function App() {
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
       {client?.activePage === "login" && (<Login />)}
+      {client?.activePage === "wallet" && (<Wallet />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
           campaignId={client.selectedCampaignId}
