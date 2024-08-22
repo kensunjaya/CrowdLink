@@ -44,14 +44,25 @@ export async function getUserByEmail(email: string) {
 }
 
 
-export async function createCampaign(author: string, title: string, description: string, targetFund: number, dueDate: string) {
+export async function createCampaign(author: string, title: string, description: string, targetFund: number, dueDate: number) {
   try {
-    await canister.createCampaign({ author: author, title: title, description: description, targetFund: targetFund, dueDate: dueDate, currentFund: 0, totalParticipant: 0 });
+    await canister.createCampaign(author, title, dueDate, description, targetFund);
     return true;
   }
   catch (error) {
     console.error("Error creating campaign:", error);
     return false;
+  }
+}
+
+export async function getCampaignsSize() {
+  try {
+    const size = await canister.getCampaignsSize();
+    return size;
+  }
+  catch (error) {
+    console.error("Error fetching campaigns size:", error);
+    return 0;
   }
 }
 
@@ -63,5 +74,16 @@ export async function getAllCampaigns() {
   catch (error) {
     console.error("Error fetching campaigns:", error);
     return [];
+  }
+}
+
+export async function updateCampaign(campaignId: number, remainingTime: number) {
+  try {
+    const success = await canister.updateCampaign(campaignId, remainingTime);
+    return true;
+  }
+  catch (error) {
+    console.error("Error updating campaigns:", error);
+    return false
   }
 }
