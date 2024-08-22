@@ -135,4 +135,8 @@ actor {
     return resultAllData;
   };
 
+  public func getCampaignsSize() : async Nat32{
+    return campaignId + 1;
+  }
+
 };

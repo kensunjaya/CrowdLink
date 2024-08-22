@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { ClientContext } from "../context/Context";
 import { canister } from "../utils/canister";
 import { createCampaign } from "../utils/methods";
+import { motion } from "framer-motion";
 
 const CreateCampaign = () => {
   const [title, setTitle] = useState<string>('');
@@ -45,8 +46,12 @@ const CreateCampaign = () => {
   return (
     <>
       <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
-        <div
+        <motion.div
           className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+          initial={{scale:0.5}}
+          animate={{scale:1}}
+          exit={{opacity:0, scale:0.5}}
+          transition={{type: 'spring'}}
           onClick={handleCardClick} // Stop propagation here
         >
           <div className="mb-5 text-xl text-center">New Campaign</div>
@@ -83,7 +88,7 @@ const CreateCampaign = () => {
               Create Campaign
             </button>
           )}
-        </div>
+        </motion.div>
       </div>
     </>
   );
