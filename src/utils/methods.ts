@@ -102,3 +102,14 @@ export async function updateCampaign(campaignId: number, remainingTime: number) 
     return false
   }
 }
+
+export async function afterPayment(userId: string, campaignId: number, amount: number) {
+  try {
+    await canister.afterPayment(userId, campaignId, amount);
+    return true;
+  }
+  catch (error) {
+    console.error("Error after payment:", error);
+    return false;
+  }
+}

@@ -6,7 +6,19 @@ import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
 import { ClientContext } from '../../context/Context';
 
-const CampaignCard: React.FC<CampaignInterface> = ({
+interface CampaignCardProps {
+  campaignId: number;
+  author: string;
+  title: string;
+  description: string;
+  targetFund: number;
+  currentFund: number;
+  totalParticipant: number;
+  dueDate: string;
+}
+
+const CampaignCard: React.FC<CampaignCardProps> = ({
+  campaignId,
   author,
   title,
   description,
@@ -30,9 +42,11 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   const [descriptions, setDescriptions] = useState<string>(description);
   const client = useContext(ClientContext);
   const [showCard, setShowCard] = useState<boolean>(true);
+  // const [campaignId, setCampaignId] = useState<number>(0);
 
   const handleClick = () => {
     client?.setActivePage('campaign-details');
+    client?.setSelectedCampaignId(campaignId);
     client?.setSelectedCampaign({
       author,
       title,
