@@ -141,6 +141,7 @@ actor {
   };
 
   public func afterPayment(userId : UserId, campaignId : CampaignId,  amount : Float) : async () {
+        let resultUser = Trie.find(users, Utils.key(userId), Text.equal);
         let resultCampaign = Trie.find(campaigns, Utils.campaignKey(campaignId), Nat32.equal);
 
         switch (resultCampaign) {
@@ -166,6 +167,23 @@ actor {
                     Utils.campaignKey(campaignId),
                     Nat32.equal,
                     ?setCampaign,
+                ).0;
+            };
+            case null {};
+        };
+        switch(resultUser){
+            case (?resultUser) {
+                let setUser : User = {
+                    username = resultUser.username;
+                    email = resultUser.email;
+                    password = resultUser.password;
+                    balance = resultUser.balance - amount;
+                };
+                users := Trie.replace(
+                    users,
+                    Utils.key(userId),
+                    Text.equal,
+                    ?setUser,
                 ).0;
             };
             case null {};
