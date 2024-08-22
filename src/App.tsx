@@ -20,6 +20,7 @@ function App() {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
+  const [allCampaigns, setAllCampaigns] = useState<[number, CampaignInterface][]>([]);
 
   const agent = new HttpAgent({ host: 'http://localhost:4943' });
   agent.fetchRootKey(); // Remove this in production
@@ -65,7 +66,9 @@ function App() {
     data?.forEach(async (element) => {
       await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
     });
-    console.log(data);
+    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
+    console.log(allCampaigns);
+    setAllCampaigns(allCampaigns);
   }
 
   useEffect(() => {
@@ -77,6 +80,7 @@ function App() {
       // setPassword(user.password);
       setUsername(user.username);
     }
+    handleGetCampaigns();
   }, []);
 
   return (
@@ -121,19 +125,26 @@ function App() {
             </button>
           </div>
         )}
-        <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button>
-
-        <div className="card">
-          {client?.allUsers?.map((value: any, index: number) => {
+        {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button> */}
+        <div className="flex space-x-3 mt-10">
+          {allCampaigns.map((value) => {
             return (
-              <div key={index}>
-                {value[1].username}, {value[1].email}, {value[1].password}
-              </div>
-            );
+              <CampaignCard
+                key={value[0]}
+                author={value[1].author}
+                title={value[1].title}
+                description={value[1].description}
+                targetFund={value[1].targetFund}
+                currentFund={value[1].currentFund}
+                totalParticipant={value[1].totalParticipant}
+                dueDate={value[1].dueDate.toString()}
+              />
+            )
           })}
         </div>
       </div>
     </div>
+
     //     <CampaignCard
     //       author={'Sherly'}
     //       title={'Main Heading'}
