@@ -1,6 +1,6 @@
 import { useContext } from 'react';
 import { canister } from './canister';
-import { Users } from './interfaces';
+import { CampaignInterface, Users } from './interfaces';
 
 export async function readUser(userId: any) {
   const user = await canister.read(userId);
@@ -70,6 +70,21 @@ export async function getAllCampaigns() {
   try {
     const campaigns = await canister.readAllCampaign();
     return campaigns;
+  }
+  catch (error) {
+    console.error("Error fetching campaigns:", error);
+    return [];
+  }
+}
+
+export const fetchCampaigns = async () => {
+  try {
+    const data = await getAllCampaigns() as [number, CampaignInterface][];
+    data?.forEach(async (element) => {
+      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
+    });
+    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
+    return allCampaigns;
   }
   catch (error) {
     console.error("Error fetching campaigns:", error);

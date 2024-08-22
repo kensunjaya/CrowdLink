@@ -15,6 +15,9 @@ interface ClientContextType {
   setActivePage: Function;
   selectedCampaign: CampaignInterface;
   setSelectedCampaign: Function;
+
+  allCampaigns: [number, CampaignInterface][];
+  setAllCampaigns: Function;
 }
 
 export const ClientContext = createContext<ClientContextType | null>(null);

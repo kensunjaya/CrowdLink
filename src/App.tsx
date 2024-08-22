@@ -3,7 +3,7 @@ import './App.css';
 import { idlFactory, canisterId } from './declarations/backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
-import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
+import { getAllCampaigns, getUserByEmail, readAllUser, updateCampaign } from './utils/methods';
 import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
@@ -21,7 +21,6 @@ function App() {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
-  const [allCampaigns, setAllCampaigns] = useState<[number, CampaignInterface][]>([]);
 
   const agent = new HttpAgent({ host: 'http://localhost:4943' });
   agent.fetchRootKey(); // Remove this in production
@@ -74,7 +73,7 @@ function App() {
     });
     const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
     console.log(allCampaigns);
-    setAllCampaigns(allCampaigns);
+    client?.setAllCampaigns(allCampaigns);
   }
 
   useEffect(() => {
@@ -90,7 +89,7 @@ function App() {
   }, []);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center py-10">
+    <div className="w-screen min-h-screen flex flex-col items-center">
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
           author={client.selectedCampaign.author}
@@ -107,14 +106,8 @@ function App() {
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        <button
-          className="bg-black text-white w-fit p-2 rounded-lg mb-5"
-          onClick={() => setIsLoginPage(!isLoginPage)}
-        >
-          Switch mode
-        </button>
         {isLoggedIn && (
-          <div className="flex flex-col space-y-5">
+          <div className="flex flex-col space-y-5 mt-[8rem]">
             <div className="text-3xl">Welcome {username}</div>
             <button
               className="bg-black text-white w-fit p-2 rounded-lg"
@@ -197,7 +190,7 @@ function App() {
         )}
         {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button> */}
         <div className="flex space-x-3 mt-10">
-          {allCampaigns.map((value) => {
+          {client?.allCampaigns.map((value) => {
             return (
               <CampaignCard
                 key={value[0]}
