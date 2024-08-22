@@ -17,11 +17,15 @@ const Navbar: React.FC = () => {
                     <span className="text-lg font-bold">CrowdLink</span>
                 </div>
 
-                <div className="flex-grow flex max-w-md justify-center">
+                <div className="flex-grow flex max-w-md justify-center items-center">
                     <Search />
                 </div>
 
                 <div className="flex items-center space-x-4">
+                    <div className="cursor-pointer px-3 py-1 border rounded-lg border-none text-gray-600 hover:bg-gray-100"
+                    onClick={() => client?.setActivePage("wallet")}>
+                        Wallet
+                    </div>
                     <button className="px-3 py-1 border rounded-lg border-gray-600 text-gray-600 hover:bg-gray-100" onClick={() => client?.setActivePage("create-campaign")}>
                         Start a Campaign
                     </button>
