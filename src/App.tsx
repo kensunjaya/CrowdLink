@@ -9,6 +9,7 @@ import { ClientContext } from './context/Context'
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const client = useContext(ClientContext);
