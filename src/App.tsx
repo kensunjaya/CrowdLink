@@ -11,7 +11,7 @@ import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
 
 function App() {
-  const user = useContext(ClientContext);
+  const client = useContext(ClientContext);
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [users, setUsers] = useState<Users[] | []>([]);
@@ -27,15 +27,6 @@ function App() {
     agent,
     canisterId,
   });
-
-
-  const handleSignIn = async (email: string, password: string) => {
-    const user = await getUserByEmail(email) as Users;
-    console.log(user);
-    if (user === null) {
-      alert("User not found");
-      return;
-    }
 
   const handleSignIn = async (email: string, password: string) => {
     const user = (await getUserByEmail(email)) as Users;
@@ -128,18 +119,19 @@ function App() {
             );
           })}
         </div>
+      </div>
     </div>
-//     <CampaignCard
-//       author={'Sherly'}
-//       title={'Main Heading'}
-//       description={
-//         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
-//       }
-//       targetFund={1000000}
-//       currentFund={500000}
-//       totalParticipant={50}
-//       dueDate={'2024-8-24'}
-//     />
+    //     <CampaignCard
+    //       author={'Sherly'}
+    //       title={'Main Heading'}
+    //       description={
+    //         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+    //       }
+    //       targetFund={1000000}
+    //       currentFund={500000}
+    //       totalParticipant={50}
+    //       dueDate={'2024-8-24'}
+    //     />
   );
 }
 
