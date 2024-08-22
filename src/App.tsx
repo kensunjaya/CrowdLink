@@ -120,18 +120,18 @@ function App() {
           })}
         </div>
       </div>
+      <CampaignCard
+        author={'Sherly'}
+        title={'Main Heading'}
+        description={
+          'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+        }
+        targetFund={1000000}
+        currentFund={500000}
+        totalParticipant={50}
+        dueDate={'2024-8-24'}
+      />
     </div>
-    //     <CampaignCard
-    //       author={'Sherly'}
-    //       title={'Main Heading'}
-    //       description={
-    //         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
-    //       }
-    //       targetFund={1000000}
-    //       currentFund={500000}
-    //       totalParticipant={50}
-    //       dueDate={'2024-8-24'}
-    //     />
   );
 }
 
