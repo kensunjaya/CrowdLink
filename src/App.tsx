@@ -7,10 +7,11 @@ import { Users } from './utils/interfaces';
 import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
 import { ClientContext } from './context/Context'
 import CreateCampaign from './components/CreateCampaign';
-
+import Navbar from './components/Navbar';
+import CampaignCard from './components/Card/CampaignCard';
 
 function App() {
-  const client = useContext(ClientContext);
+  const user = useContext(ClientContext);
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [users, setUsers] = useState<Users[] | []>([]);
@@ -28,7 +29,6 @@ function App() {
   });
 
 
-
   const handleSignIn = async (email: string, password: string) => {
     const user = await getUserByEmail(email) as Users;
     console.log(user);
@@ -36,6 +36,9 @@ function App() {
       alert("User not found");
       return;
     }
+
+  const handleSignIn = async (email: string, password: string) => {
+    const user = (await getUserByEmail(email)) as Users;
     if (user.password === password) {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
@@ -43,12 +46,12 @@ function App() {
     } else {
       alert('Wrong password');
     }
-  }
+  };
 
   const handleLogOut = () => {
     localStorage.removeItem('auth');
     setIsLoggedIn(false);
-  }
+  };
 
   const handleSignUp = async () => {
     const success = await canister.createUser({ username: username, email: email, password: password, balance: 0 });
@@ -74,7 +77,9 @@ function App() {
     <div className="w-screen min-h-screen flex flex-col items-center py-10">
       {client?.showCreateCampaign && (<CreateCampaign />)}
       <div className="w-[60%] h-full bg-white">
-
+        <div className="flex flex-col space-y-5">
+          <Navbar />
+        </div>
         <button className="bg-black text-white w-fit p-2 rounded-lg mb-5" onClick={() => setIsLoginPage(!isLoginPage)}>Switch mode</button>
         {isLoggedIn && (
           <div className="flex flex-col space-y-5">
@@ -123,8 +128,18 @@ function App() {
             );
           })}
         </div>
-      </div>
     </div>
+//     <CampaignCard
+//       author={'Sherly'}
+//       title={'Main Heading'}
+//       description={
+//         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+//       }
+//       targetFund={1000000}
+//       currentFund={500000}
+//       totalParticipant={50}
+//       dueDate={'2024-8-24'}
+//     />
   );
 }
 

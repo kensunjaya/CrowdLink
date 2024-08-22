@@ -4,11 +4,12 @@ export interface Users {
   password: string;
 }
 
-export interface Campaign {
-  title: string,
-  description: string,
-  author: string,
-  currentFund: number,
-  totalParticipant: number,
-  targetFund: number,
+export interface CampaignInterface {
+  author: string;
+  title: string;
+  description: string;
+  targetFund: number;
+  currentFund: number;
+  totalParticipant: number;
+  dueDate: string;
 }
