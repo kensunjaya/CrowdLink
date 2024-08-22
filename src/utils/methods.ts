@@ -55,6 +55,17 @@ export async function createCampaign(author: string, title: string, description:
   }
 }
 
+export async function getCampaignsSize() {
+  try {
+    const size = await canister.getCampaignsSize();
+    return size;
+  }
+  catch (error) {
+    console.error("Error fetching campaigns size:", error);
+    return 0;
+  }
+}
+
 export async function getAllCampaigns() {
   try {
     const campaigns = await canister.readAllCampaign();
