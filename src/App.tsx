@@ -9,6 +9,7 @@ import { ClientContext } from './context/Context'
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
+import Register from './components/Register';
 
 function App() {
   const client = useContext(ClientContext);
@@ -67,6 +68,7 @@ function App() {
   return (
     <div className="w-screen min-h-screen flex flex-col items-center py-10">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      {client?.activePage === "register" && (<Register />)}
       <div className="w-[60%] h-full bg-white">
         <div className="flex flex-col space-y-5">
           <Navbar />
