@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { CampaignInterface } from '../../utils/interfaces';
 import DefaultImage from '../../assets/morning_forest.jpg';
-import { IoIosPerson } from 'react-icons/io';
+import { RiShakeHandsFill } from "react-icons/ri";
 import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
 import { ClientContext } from '../../context/Context';
@@ -80,31 +80,31 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
           <div className="justify-between flex flex-col p-2 text-start">
             <div className="justify-between flex flex-row items-center">
               <div className="text-xl font-semibold">{title}</div>
-              <div className="flex flex-row">
-                <IoIosPerson />
-                <div className="text-xs ml-2 font-semibold">
+              <div className="flex flex-row text-md items-center justify-center">
+                <RiShakeHandsFill />
+                <div className="ml-2 font-semibold">
                   {totalParticipant}
                 </div>
               </div>
             </div>
-            <div className="text-xs font-semibold text-grays">{author}</div>
+            <div className="text-sm font-semibold text-grays">{author}</div>
             <div className="flex flex-row items-center">
               <TbClockHour4 className=" mt-1" />
-              {time === 0 ? (
+              {time > 1 ? (
                 <div className="text-sm mx-1 font-semibold ">
                   {time} days left
                 </div>
               ) : (
                 <div className="text-sm mx-1 font-semibold ">
-                  Less than 24 hours left
+                  {"Less than 24 hours left"}
                 </div>
               )}
               <BsDot className="mt-1" />
               <div className="text-sm mx-1 font-semibold ">
-                {fundPercentage}% Funded
+                {Math.round(fundPercentage)}% funded
               </div>
             </div>
-            <p className="text-xs font-normal justify-between">
+            <p className="text-sm mt-2 font-normal justify-between">
               {descriptions.length > 100
                 ? descriptions.substring(0, 100) + '...'
                 : descriptions}
