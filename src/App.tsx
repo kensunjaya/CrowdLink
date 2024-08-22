@@ -8,10 +8,8 @@ import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
 import { ClientContext } from './context/Context'
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
-import SideBar from './components/SideBar';
 import CampaignCard from './components/Card/CampaignCard';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link, Element } from 'react-scroll';
 
 function App() {
   const client = useContext(ClientContext);
@@ -68,39 +66,70 @@ function App() {
   }, []);
 
   return (
-    <div className="w-full min-h-screen flex flex-col items-center py-10">
-      <AnimatePresence>
-        {client?.activePage === 'create-campaign' && (
-          <motion.div
-            className='fixed min-h-screen w-full items-center justify-center'
-            initial={{scale:0.5}}
-            animate={{scale:1}}
-            exit={{opacity:0, scale:0.5}}
-            transition={{duration: 0.5, type: 'spring'}}
-          >
-            <CreateCampaign/>
-          </motion.div>
+    <div className="w-screen min-h-screen flex flex-col items-center py-10">
+      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      <div className="w-[60%] h-full bg-white">
+        <div className="flex flex-col space-y-5">
+          <Navbar />
+        </div>
+        <button className="bg-black text-white w-fit p-2 rounded-lg mb-5" onClick={() => setIsLoginPage(!isLoginPage)}>Switch mode</button>
+        {isLoggedIn && (
+          <div className="flex flex-col space-y-5">
+            <div className="text-3xl">Welcome {username}</div>
+            <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleLogOut()}>Logout</button>
+          </div>
         )}
-      </AnimatePresence>
+        {!isLoggedIn && (
+          <div className="flex flex-col space-y-3">
+            {isLoginPage && (
+              <>
+                <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleSignIn(email, password)}>Sign In</button>
+              </>
+            )}
+            {!isLoginPage && (
+              <>
+                <input placeholder="username" className="py-1 px-3 border border-black rounded-md" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleSignUp}>Sign Up</button>
+              </>
+            )}
+            <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={async () => {
+              const value = await readAllUser();
+              console.log('user: ', client);
+              client?.setAllUsers(value);
+              setUsers(value as Users[] ?? []);
+              console.log(client?.allUsers);
+            }}>
+              Refetch users
+            </button>
+          </div>
+        )}
 
-      <Navbar/>
-      <SideBar/>
-
-      <Element name='Home' className='min-h-screen'>
-        <motion.div>
-          
-        </motion.div>
-      </Element>
-      
-      <Element name='Campaigns' className='min-h-screen'>
-
-      </Element>
-
-      <Element name='' className='min-h-screen'>
-
-      </Element>
-
+        <div className="card">
+          {client?.allUsers?.map((value: any, index: number) => {
+            return (
+              <div key={index}>
+                {value[1].username}, {value[1].email}, {value[1].password}
+              </div>
+            );
+          })}
+        </div>
+      </div>
     </div>
+    //     <CampaignCard
+    //       author={'Sherly'}
+    //       title={'Main Heading'}
+    //       description={
+    //         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+    //       }
+    //       targetFund={1000000}
+    //       currentFund={500000}
+    //       totalParticipant={50}
+    //       dueDate={'2024-8-24'}
+    //     />
   );
 }
 
