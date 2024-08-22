@@ -19,6 +19,10 @@ import Footer from './components/Footer';
 import Wallet from './components/Wallet';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
+import { Element } from 'react-scroll';
+import { motion } from 'framer-motion';
+import { Homepage } from './sections/Homepage';
+import Logo from './assets/crowdlink_logo.png';
 
 function App() {
   const client = useContext(ClientContext);
@@ -97,14 +101,48 @@ function App() {
   }, []);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center">
-        <div className="flex justify-center mt-[18vh] mx-[40vh] text-lg text-black">
-          <p>Welcome to CrowdLink where transparency meets innovation in crowdfunding. Powered by 
-            blockchain technology, CrowdLink ensures every transaction is secure, transparent, and immutable. 
-            Whether you're a project creator or a backer, our platform provides the trust and accountability you 
-            need to confidently engage in the world of crowdfunding. Join us and experience the future of 
-            fundraising with CrowdLink.</p>
+    <div className="w-full min-h-screen flex flex-col items-center">
+      <Element name='Home'>
+        <Homepage/>
+      </Element>
+
+      <Element name='AboutUs'>
+        <div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center">
+        <img src={Logo} alt="Logo" width={240} height={240}/>
+        <p>
+          <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding. 
+          <strong> Powered by blockchain technology</strong>, CrowdLink ensures every transaction is 
+          <strong><em> secure, transparent, and immutable</em></strong>. Whether you're a project creator or a backer, our platform provides the 
+          <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding. 
+          Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
+        </p>
+
         </div>
+      </Element>
+
+      <Element name='ViewCampaigns' className='relative pt-[100px]'>
+        <div className='flex justify-center items-center text-xl font-bold'>
+          ALL CAMPAIGN
+        </div>
+        <div className="flex space-x-3 mt-10 mb-10">
+          {client?.allCampaigns.map((value) => {
+            return (
+              <CampaignCard
+                key={value[0]}
+                campaignId={value[0]}
+                author={value[1].author}
+                title={value[1].title}
+                description={value[1].description}
+                targetFund={value[1].targetFund}
+                currentFund={value[1].currentFund}
+                totalParticipant={value[1].totalParticipant}
+                dueDate={value[1].dueDate.toString()}
+              />
+            );
+          })}
+        </div>
+      </Element>
+        
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
       {client?.activePage === "login" && (<Login />)}
@@ -125,25 +163,7 @@ function App() {
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        <div className='flex justify-center items-center text-xl font-bold'>
-          ALL CAMPAIGN
-        </div>
-        <div className="flex space-x-3 mt-10 mb-10">
-          {client?.allCampaigns.map((value) => {
-            return (
-              <CampaignCard
-                key={value[0]}
-                author={value[1].author}
-                title={value[1].title}
-                description={value[1].description}
-                targetFund={value[1].targetFund}
-                currentFund={value[1].currentFund}
-                totalParticipant={value[1].totalParticipant}
-                dueDate={value[1].dueDate.toString()}
-              />
-            );
-          })}
-        </div>
+        
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
           Get the newest campaigns in your inbox
