@@ -98,13 +98,13 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center">
-        <div className="flex justify-center mt-[18vh] mx-[40vh] text-lg text-black">
-          <p>Welcome to CrowdLink where transparency meets innovation in crowdfunding. Powered by 
-            blockchain technology, CrowdLink ensures every transaction is secure, transparent, and immutable. 
-            Whether you're a project creator or a backer, our platform provides the trust and accountability you 
-            need to confidently engage in the world of crowdfunding. Join us and experience the future of 
-            fundraising with CrowdLink.</p>
-        </div>
+      <div className="flex justify-center mt-[18vh] mx-[40vh] text-lg text-black">
+        <p>Welcome to CrowdLink where transparency meets innovation in crowdfunding. Powered by
+          blockchain technology, CrowdLink ensures every transaction is secure, transparent, and immutable.
+          Whether you're a project creator or a backer, our platform provides the trust and accountability you
+          need to confidently engage in the world of crowdfunding. Join us and experience the future of
+          fundraising with CrowdLink.</p>
+      </div>
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
       {client?.activePage === "login" && (<Login />)}
@@ -133,6 +133,7 @@ function App() {
             return (
               <CampaignCard
                 key={value[0]}
+                campaignId={value[0]}
                 author={value[1].author}
                 title={value[1].title}
                 description={value[1].description}
@@ -146,19 +147,19 @@ function App() {
         </div>
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
-          Get the newest campaigns in your inbox
+            Get the newest campaigns in your inbox
           </div>
-        <div className='flex justify-center items-center mb-2'>
-          <input
-          className='border border-black rounded-lg p-2 w-[40%] mx-2'
-          type='textfield'
-          placeholder='Enter your email address'
-          />
-          <button className='bg-black text-white p-2 rounded-lg'>Sign Me Up</button>
-        </div>
-        <div className='flex justify-center items-center mb-5'>
-          <h6>By clicking “Sign me up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
-        </div>
+          <div className='flex justify-center items-center mb-2'>
+            <input
+              className='border border-black rounded-lg p-2 w-[40%] mx-2'
+              type='textfield'
+              placeholder='Enter your email address'
+            />
+            <button className='bg-black text-white p-2 rounded-lg'>Sign Me Up</button>
+          </div>
+          <div className='flex justify-center items-center mb-5'>
+            <h6>By clicking “Sign me up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+          </div>
         </div>
         {isLoggedIn && (
           <div className="flex flex-col space-y-5 mt-[8rem]">
