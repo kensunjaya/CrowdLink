@@ -18,6 +18,7 @@ module {
         totalParticipant : Nat32;
         dueDate : Time.Time;
         status : Text;
+        donation : Trie.Trie<UserId, Float>;
     };
 
     public type Campaigns = Trie.Trie<CampaignId, Campaign>;
@@ -31,5 +32,6 @@ module {
         balance : Float;
     };
 
-    public type Users = Trie.Trie<UserId, User>;    
+    public type Users = Trie.Trie<UserId, User>;
+
 };
