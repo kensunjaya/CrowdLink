@@ -78,6 +78,30 @@ actor {
     return data;
   };
 
+  public func topUp(userId : UserId, amount : Float) : async () {
+    let resultUser = Trie.find(users, Utils.key(userId), Text.equal);
+
+    switch (resultUser) {
+        case (?resultUser) {
+            let user = resultUser;
+            let newUser : User = {
+                username = user.username;
+                email = user.email;
+                password = user.password;
+                balance = user.balance + amount;
+            };
+
+            users := Trie.replace(
+                users,
+                Utils.key(userId),
+                Text.equal,
+                ?newUser,
+            ).0;
+        };
+        case null {};
+    };
+  };
+
   public func createCampaign(author : UserId, title: Text, dueDate : Time.Time, description : Text, targetFund : Float) : async () {
 
     let campaign : Campaign = {
@@ -190,6 +214,61 @@ actor {
         };
     };
 
+  public func transferFund(campaignId : CampaignId) : async () {
+    var resultCampaign = Trie.find(campaigns, Utils.campaignKey(campaignId), Nat32.equal);
+    switch (resultCampaign) {
+        case (?resultCampaign) {
+            var resultUser = Trie.find(users, Utils.key(resultCampaign.author), Text.equal);
+            switch(resultUser){
+                case (?resultUser) {
+                    let setUser : User = {
+                        username = resultUser.username;
+                        email = resultUser.email;
+                        password = resultUser.password;
+                        balance = resultUser.balance + resultCampaign.currentFund;
+                    };
+                    users := Trie.replace(
+                        users,
+                        Utils.key(resultCampaign.author),
+                        Text.equal,
+                        ?setUser,
+                    ).0;
+                };
+                case null {};
+            };
+        };
+        case null {};
+    };
+  };
 
+  public func returnFund(campaignId : CampaignId) : async () {
+    var resultCampaign = Trie.find(campaigns, Utils.campaignKey(campaignId), Nat32.equal);
+    switch (resultCampaign) {
+        case (?resultCampaign) {
+            var resultUser = Iter.toArray(Trie.iter(resultCampaign.donation));
+            for((userId, amount) in resultUser.vals()) {
+                var resultUser = Trie.find(users, Utils.key(userId), Text.equal);
+                switch(resultUser){
+                    case (?resultUser) {
+                        let setUser : User = {
+                            username = resultUser.username;
+                            email = resultUser.email;
+                            password = resultUser.password;
+                            balance = resultUser.balance + amount;
+                        };
+                        users := Trie.replace(
+                            users,
+                            Utils.key(userId),
+                            Text.equal,
+                            ?setUser,
+                        ).0;
+                    };
+                    case null {};
+                };
+            };
+        };
+        case null {};
+    };
+  };
 
 };
