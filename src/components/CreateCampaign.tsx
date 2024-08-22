@@ -25,7 +25,7 @@ const CreateCampaign = () => {
 
   return (
     <>
-      <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setShowCreateCampaign(false)}>
+      <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
         <div
           className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
           onClick={handleCardClick} // Stop propagation here

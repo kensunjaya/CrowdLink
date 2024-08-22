@@ -11,8 +11,8 @@ interface ClientContextType {
   setIsLoggedIn: Function,
   setIsLoading: Function,
 
-  showCreateCampaign: boolean,
-  setShowCreateCampaign: Function,
+  activePage: string,
+  setActivePage: Function,
 }
 
 

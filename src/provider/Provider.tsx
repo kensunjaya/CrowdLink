@@ -12,18 +12,18 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const [allUsers, setAllUsers] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [showCreateCampaign, setShowCreateCampaign] = useState<boolean>(false);
+  const [activePage, setActivePage] = useState<string>("");
 
   return <ClientContext.Provider value={{
     allUsers,
     user,
     isLoading,
     isLoggedIn,
-    showCreateCampaign,
+    activePage,
     setUser,
     setAllUsers,
     setIsLoading,
     setIsLoggedIn,
-    setShowCreateCampaign
+    setActivePage
   }}>{children}</ClientContext.Provider>;
 };
