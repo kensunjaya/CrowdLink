@@ -8,6 +8,7 @@ import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
+import Register from './components/Register';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -91,6 +92,8 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center py-10">
+      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      {client?.activePage === "register" && (<Register />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
           author={client.selectedCampaign.author}
@@ -102,7 +105,6 @@ function App() {
           dueDate={client.selectedCampaign.dueDate}
         />
       )}
-      {client?.activePage === 'create-campaign' && <CreateCampaign />}
       <div className="w-[60%] h-full bg-white">
         <div className="flex flex-col space-y-5">
           <Navbar />
