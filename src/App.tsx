@@ -9,6 +9,7 @@ import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
 import Register from './components/Register';
+import Login from './components/Login';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -94,6 +95,7 @@ function App() {
     <div className="w-screen min-h-screen flex flex-col items-center py-10">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
+      {client?.activePage === "login" && (<Login />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
           author={client.selectedCampaign.author}
