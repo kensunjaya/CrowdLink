@@ -65,7 +65,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
         <div className="text-xs font-semibold text-grays">{author}</div>
         <div className="flex flex-row items-center">
           <TbClockHour4 className=" mt-1" />
-          {time === 0 ? (
+          {time !== 0 ? (
             <div className="text-sm mx-1 font-semibold ">{time} days left</div>
           ) : (
             <div className="text-sm mx-1 font-semibold ">
