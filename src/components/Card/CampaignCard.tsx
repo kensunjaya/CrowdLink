@@ -30,9 +30,9 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   useEffect(() => {
     const cutDescription = () => {
       if (description.length > 100) {
-        return description.slice(0, 100) + '...';
+        setDescriptions(description.slice(0, 100) + '...');
       }
-      return description;
+      setDescriptions(description);
     };
   });
   return (
