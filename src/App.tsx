@@ -15,6 +15,7 @@ import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
 import Register from './components/Register';
 import Login from './components/Login';
+import Footer from './components/Footer';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 
@@ -96,6 +97,13 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center">
+        <div className="flex justify-center mt-[18vh] mx-[40vh] text-lg text-black">
+          <p>Welcome to CrowdLink where transparency meets innovation in crowdfunding. Powered by 
+            blockchain technology, CrowdLink ensures every transaction is secure, transparent, and immutable. 
+            Whether you're a project creator or a backer, our platform provides the trust and accountability you 
+            need to confidently engage in the world of crowdfunding. Join us and experience the future of 
+            fundraising with CrowdLink.</p>
+        </div>
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
       {client?.activePage === "login" && (<Login />)}
@@ -110,9 +118,44 @@ function App() {
           dueDate={client.selectedCampaign.dueDate}
         />
       )}
-      <div className="w-[60%] h-full bg-white">
+      <div className="mt-[5vh] w-[60%]">
         <div className="flex flex-col space-y-5">
           <Navbar />
+        </div>
+        <div className='flex justify-center items-center text-xl font-bold'>
+          ALL CAMPAIGN
+        </div>
+        <div className="flex space-x-3 mt-10 mb-10">
+          {client?.allCampaigns.map((value) => {
+            return (
+              <CampaignCard
+                key={value[0]}
+                author={value[1].author}
+                title={value[1].title}
+                description={value[1].description}
+                targetFund={value[1].targetFund}
+                currentFund={value[1].currentFund}
+                totalParticipant={value[1].totalParticipant}
+                dueDate={value[1].dueDate.toString()}
+              />
+            );
+          })}
+        </div>
+        <div className='bg-gray-300 rounded-lg p-5 m-5'>
+          <div className='flex justify-center items-center text-2xl font-bold mb-5'>
+          Get the newest campaigns in your inbox
+          </div>
+        <div className='flex justify-center items-center mb-2'>
+          <input
+          className='border border-black rounded-lg p-2 w-[40%] mx-2'
+          type='textfield'
+          placeholder='Enter your email address'
+          />
+          <button className='bg-black text-white p-2 rounded-lg'>Sign Me Up</button>
+        </div>
+        <div className='flex justify-center items-center mb-5'>
+          <h6>By clicking “Sign me up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+        </div>
         </div>
         {isLoggedIn && (
           <div className="flex flex-col space-y-5 mt-[8rem]">
@@ -126,7 +169,7 @@ function App() {
           </div>
         )}
         {!isLoggedIn && (
-          <div className="flex flex-col space-y-3">
+          <div className="flex flex-col space-y-3 mb-5">
             {isLoginPage && (
               <>
                 <input
@@ -196,24 +239,8 @@ function App() {
             </button>
           </div>
         )}
-        {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button> */}
-        <div className="flex space-x-3 mt-10">
-          {client?.allCampaigns.map((value) => {
-            return (
-              <CampaignCard
-                key={value[0]}
-                author={value[1].author}
-                title={value[1].title}
-                description={value[1].description}
-                targetFund={value[1].targetFund}
-                currentFund={value[1].currentFund}
-                totalParticipant={value[1].totalParticipant}
-                dueDate={value[1].dueDate.toString()}
-              />
-            );
-          })}
-        </div>
       </div>
+      <Footer />
     </div>
   );
 }
