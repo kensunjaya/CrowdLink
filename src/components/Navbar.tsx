@@ -31,10 +31,10 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div className="flex items-center space-x-4">
-                    <button className="px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700"> {/* Adjusted padding */}
+                    <button className="px-3 py-1 bg-gray-600 text-white rounded-lg hover:bg-gray-700">
                         Sign Up
                     </button>
-                    <button className="px-3 py-1 border rounded-lg border-gray-600 text-gray-600 hover:bg-gray-100"> {/* Adjusted padding */}
+                    <button className="px-3 py-1 border rounded-lg border-gray-600 text-gray-600 hover:bg-gray-100">
                         Log In
                     </button>
                 </div>
