@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
-import { ClientContext } from "../context/Context";
-import { canister } from "../utils/canister";
-import { createCampaign, fetchCampaigns } from "../utils/methods";
-import { motion } from "framer-motion";
+import { useContext, useState } from 'react';
+import { ClientContext } from '../context/Context';
+import { canister } from '../utils/canister';
+import { createCampaign, fetchCampaigns } from '../utils/methods';
+import { motion } from 'framer-motion';
 
 const CreateCampaign = () => {
   const [title, setTitle] = useState<string>('');
@@ -23,23 +23,22 @@ const CreateCampaign = () => {
 
   const handleCreateCampaign = async () => {
     const success = await createCampaign(
-      client?.user?.username || "Anonymous",
+      client?.user?.username || 'Anonymous',
       title,
       description,
       parseFloat(target),
       date ? Math.floor(date.getTime() * 1000000) : 0,
     );
     if (success) {
-      alert("Campaign created successfully");
-      client?.setActivePage("");
+      alert('Campaign created successfully');
+      client?.setActivePage('');
       await fetchCampaigns().then((data) => {
         client?.setAllCampaigns(data);
-      })
+      });
+    } else {
+      alert('Failed to create campaign');
     }
-    else {
-      alert("Failed to create campaign");
-    }
-  }
+  };
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to the background
@@ -52,7 +51,9 @@ const CreateCampaign = () => {
         className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
         onClick={() => client?.setActivePage('')}
       >
-        <div className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10" onClick={handleCardClick} // Stop propagation here
+        <div
+          className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
+          onClick={handleCardClick} // Stop propagation here
         >
           <div className="mb-5 text-xl text-center">New Campaign</div>
           <div className="mb-1 text-xs">Campaign Title</div>

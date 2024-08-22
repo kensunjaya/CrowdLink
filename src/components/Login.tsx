@@ -1,6 +1,8 @@
-import React from "react";
-import { useContext, useState } from "react";
-import { ClientContext } from "../context/Context";
+import React from 'react';
+import { useContext, useState } from 'react';
+import { ClientContext } from '../context/Context';
+import { getUserByEmail } from '../utils/methods';
+import { Users } from '../utils/interfaces';
 
 const Login = () => {
   const [email, setEmail] = useState<string>('');
@@ -12,7 +14,7 @@ const Login = () => {
 
   const onSubmit = () => {
     let valid = true;
-    if (!email || !password ) {
+    if (!email || !password) {
       alert('Please fill in all fields');
       return;
     }
@@ -22,8 +24,9 @@ const Login = () => {
     setPasswordError(null);
 
     // email pattern validation
-    let pattern = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!pattern.test(email)) { 
+    let pattern =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!pattern.test(email)) {
       setEmailError('Invalid email');
       valid = false;
     }
@@ -35,10 +38,11 @@ const Login = () => {
 
     if (valid && email && password) {
       alert('Registration successful!');
+      handleSignIn(email, password);
       // Optionally reset form fields
       setEmail('');
       setPassword('');
-      client?.setActivePage(""); // Close the modal
+      client?.setActivePage(''); // Close the modal
     }
   };
 
@@ -47,38 +51,71 @@ const Login = () => {
     e.stopPropagation();
   };
 
+  const handleSignIn = async (email: string, password: string) => {
+    const user = (await getUserByEmail(email)) as Users;
+    if (!user) {
+      alert('User not found');
+      return;
+    }
+    if (user.password === password) {
+      alert('Login success');
+      localStorage.setItem('auth', JSON.stringify(user));
+      client?.setUser(user);
+    } else {
+      alert('Wrong password');
+    }
+  };
+
   return (
-    <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
+    <div
+      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+      onClick={() => client?.setActivePage('')}
+    >
       <div
-        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
         onClick={handleCardClick}
       >
         <div className="mb-5 text-xl text-center">LOGIN</div>
         <div className="mb-1 text-xs">Email</div>
         <input
-          className={`py-1 px-3 border ${emailError ? 'border-red-500' : 'border-black'} rounded-md mb-1`}
+          className={`py-1 px-3 border ${
+            emailError ? 'border-red-500' : 'border-black'
+          } rounded-md mb-1`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
         />
-        {emailError && <div className="text-red-500 text-xs mb-1">{emailError}</div>}
+        {emailError && (
+          <div className="text-red-500 text-xs mb-1">{emailError}</div>
+        )}
         <div className="mb-1 text-xs">Password</div>
         <input
-          className={`py-1 px-3 border ${passwordError ? 'border-red-500' : 'border-black'} rounded-md mb-1`}
+          className={`py-1 px-3 border ${
+            passwordError ? 'border-red-500' : 'border-black'
+          } rounded-md mb-1`}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {passwordError && <div className="text-red-500 text-xs mb-1">{passwordError}</div>}
+        {passwordError && (
+          <div className="text-red-500 text-xs mb-1">{passwordError}</div>
+        )}
         <div className="flex pt-2 pb-2 justify-end">
-        <div className="pr-2 text-sm">Don't have an account?</div>
-            <button type="button" onClick={() => client?.setActivePage("register")} className="text-black text-sm underline hover:cursor-pointer">
-              Register here
-            </button>
-        </div>
-          <button className="mt-2 bg-black text-white p-2 rounded-lg" onClick={onSubmit}>
-            Login
+          <div className="pr-2 text-sm">Don't have an account?</div>
+          <button
+            type="button"
+            onClick={() => client?.setActivePage('register')}
+            className="text-black text-sm underline hover:cursor-pointer"
+          >
+            Register here
           </button>
+        </div>
+        <button
+          className="mt-2 bg-black text-white p-2 rounded-lg"
+          onClick={onSubmit}
+        >
+          Login
+        </button>
       </div>
     </div>
   );

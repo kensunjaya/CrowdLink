@@ -2,6 +2,7 @@ import React from 'react';
 import { useContext, useState } from 'react';
 import { ClientContext } from '../context/Context';
 import { motion } from 'framer-motion';
+import { canister } from '../utils/canister';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -48,6 +49,7 @@ const Register = () => {
 
     if (valid && username && email && password && confirmpassword) {
       alert('Registration successful!');
+      handleSignUp();
       // Optionally reset form fields
       setUsername('');
       setEmail('');
@@ -62,13 +64,27 @@ const Register = () => {
     e.stopPropagation();
   };
 
+  const handleSignUp = async () => {
+    const success = await canister.createUser({
+      username: username,
+      email: email,
+      password: password,
+      balance: 0,
+    });
+    if (success) {
+      setEmail('');
+      setUsername('');
+      setPassword('');
+    }
+  };
+
   return (
     <div
       className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
       onClick={() => client?.setActivePage('')}
     >
       <motion.div
-        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
         initial={{ scale: 0.5 }}
         animate={{ scale: 1 }}
         exit={{ opacity: 0, scale: 0.5 }}

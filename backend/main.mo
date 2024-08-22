@@ -22,7 +22,6 @@ actor {
 
     stable var users : Users = Trie.empty();
     stable var campaigns : Campaigns = Trie.empty();
-    // stable var timeRemainings : TimeRemainings = Trie.empty();
 
     public func createUser(user : User) : async UserId {
         let userId = user.email;
@@ -91,6 +90,7 @@ actor {
       dateCreated = Time.now();
       dueDate = dueDate;
       status = "Pending";
+      donation = Trie.empty();
     };
 
     campaigns := Trie.replace(
@@ -116,6 +116,7 @@ actor {
             totalParticipant = resultCampaign.totalParticipant;
             dueDate = resultCampaign.dueDate;
             status = Utils.campaignStatus(resultCampaign, timeRemaining);
+            donation = resultCampaign.donation;
           };
           campaigns := Trie.replace(
             campaigns,
@@ -137,6 +138,40 @@ actor {
 
   public func getCampaignsSize() : async Nat32{
     return campaignId + 1;
-  }
+  };
+
+  public func afterPayment(userId : UserId, campaignId : CampaignId,  amount : Float) : async () {
+        let resultCampaign = Trie.find(campaigns, Utils.campaignKey(campaignId), Nat32.equal);
+
+        switch (resultCampaign) {
+            case (?resultCampaign) {
+                let setCampaign : Campaign = {
+                    author = resultCampaign.author;
+                    title = resultCampaign.title;
+                    description = resultCampaign.description;
+                    targetFund = resultCampaign.targetFund;
+                    currentFund = resultCampaign.currentFund + amount;
+                    totalParticipant = resultCampaign.totalParticipant + 1;
+                    dueDate = resultCampaign.dueDate;
+                    status = Utils.campaignStatus(resultCampaign, Time.now() - resultCampaign.dueDate);
+                    donation = Trie.replace(
+                        resultCampaign.donation,
+                        Utils.key(userId),
+                        Text.equal,
+                        ?amount,
+                    ).0;
+                };
+                campaigns := Trie.replace(
+                    campaigns,
+                    Utils.campaignKey(campaignId),
+                    Nat32.equal,
+                    ?setCampaign,
+                ).0;
+            };
+            case null {};
+        };
+    };
+
+
 
 };

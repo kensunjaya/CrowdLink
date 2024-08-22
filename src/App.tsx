@@ -17,7 +17,6 @@ import Register from './components/Register';
 import Login from './components/Login';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
-import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const client = useContext(ClientContext);
