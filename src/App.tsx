@@ -5,8 +5,9 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
 import { Users } from './utils/interfaces';
-import {} from './utils/methods';
+import { } from './utils/methods';
 import { ClientContext } from './context/Context';
+import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
 
 function App() {
@@ -76,113 +77,60 @@ function App() {
   }, []);
 
   return (
-    // <div className="w-full min-h-screen bg-white">
-    //   <button
-    //     className="bg-black text-white w-fit p-2 rounded-lg mb-5"
-    //     onClick={() => setIsLoginPage(!isLoginPage)}
-    //   >
-    //     Switch mode
-    //   </button>
-    //   {isLoggedIn && (
-    //     <div className="flex flex-col space-y-5">
-    //       <div className="text-3xl">Welcome {username}</div>
-    //       <button
-    //         className="bg-black text-white w-fit p-2 rounded-lg"
-    //         onClick={() => handleLogOut()}
-    //       >
-    //         Logout
-    //       </button>
-    //     </div>
-    //   )}
-    //   {!isLoggedIn && (
-    //     <div className="flex flex-col space-y-3">
-    //       {isLoginPage && (
-    //         <>
-    //           <input
-    //             placeholder="email"
-    //             className="py-1 px-3 border border-black rounded-md"
-    //             type="email"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //           <input
-    //             placeholder="password"
-    //             className="py-1 px-3 border border-black rounded-md"
-    //             type="password"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //           <button
-    //             className="bg-black text-white w-fit p-2 rounded-lg"
-    //             onClick={() => handleSignIn(email, password)}
-    //           >
-    //             Sign In
-    //           </button>
-    //         </>
-    //       )}
-    //       {!isLoginPage && (
-    //         <>
-    //           <input
-    //             placeholder="username"
-    //             className="py-1 px-3 border border-black rounded-md"
-    //             type="text"
-    //             value={username}
-    //             onChange={(e) => setUsername(e.target.value)}
-    //           />
-    //           <input
-    //             placeholder="email"
-    //             className="py-1 px-3 border border-black rounded-md"
-    //             type="email"
-    //             value={email}
-    //             onChange={(e) => setEmail(e.target.value)}
-    //           />
-    //           <input
-    //             placeholder="password"
-    //             className="py-1 px-3 border border-black rounded-md"
-    //             type="password"
-    //             value={password}
-    //             onChange={(e) => setPassword(e.target.value)}
-    //           />
-    //           <button
-    //             className="bg-black text-white w-fit p-2 rounded-lg"
-    //             onClick={() => createUser()}
-    //           >
-    //             Sign Up
-    //           </button>
-    //         </>
-    //       )}
-    //       <button
-    //         className="bg-black text-white w-fit p-2 rounded-lg"
-    //         onClick={() => readAllUser()}
-    //       >
-    //         Refetch users
-    //       </button>
-    //       {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => getUserByEmail(email)}>Test button</button> */}
-    //     </div>
-    //   )}
+    <div className="w-full min-h-screen bg-white">
+      <div className="flex flex-col space-y-5">
+        <Navbar />
+      </div>
+      <button className="bg-black text-white w-fit p-2 rounded-lg mb-5" onClick={() => setIsLoginPage(!isLoginPage)}>Switch mode</button>
+      {isLoggedIn && (
+        <div className="flex flex-col space-y-5">
+          <div className="text-3xl">Welcome {username}</div>
+          <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleLogOut()}>Logout</button>
+        </div>
+      )}
+      {!isLoggedIn && (
+        <div className="flex flex-col space-y-3">
+          {isLoginPage && (
+            <>
+              <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleSignIn(email, password)}>Sign In</button>
+            </>
+          )}
+          {!isLoginPage && (
+            <>
+              <input placeholder="username" className="py-1 px-3 border border-black rounded-md" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+              <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+              <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+              <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => createUser()}>Sign Up</button>
+            </>
+          )}
+          <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => readAllUser()}>Refetch users</button>
+          {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => getUserByEmail(email)}>Test button</button> */}
+        </div>
+      )}
 
-    //   <div className="card">
-    //     {users.map((value: any, index: number) => {
-    //       return (
-    //         <div key={index}>
-    //           {value[1].username}, {value[1].email}, {value[1].password}
-    //         </div>
-    //       );
-    //     })}
-    //   </div>
-    //   <CampaignCard />
-    // </div>
-    <CampaignCard
-      author={'Sherly'}
-      title={'Main Heading'}
-      description={
-        'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
-      }
-      targetFund={1000000}
-      currentFund={500000}
-      totalParticipant={50}
-      dueDate={'2024-8-24'}
-    />
+      <div className="card">
+         {users.map((value: any, index: number) => {
+           return (
+             <div key={index}>
+               {value[1].username}, {value[1].email}, {value[1].password}
+             </div>
+           );
+         })}
+      </div>
+    </div>
+//     <CampaignCard
+//       author={'Sherly'}
+//       title={'Main Heading'}
+//       description={
+//         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+//       }
+//       targetFund={1000000}
+//       currentFund={500000}
+//       totalParticipant={50}
+//       dueDate={'2024-8-24'}
+//     />
   );
 }
 
