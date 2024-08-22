@@ -1,17 +1,17 @@
 import { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { idlFactory, canisterId } from './declarations/backend'
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { idlFactory, canisterId } from './declarations/backend';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
 import { Users } from './utils/interfaces';
 import { } from './utils/methods';
 import { ClientContext } from './context/Context';
 import Navbar from './components/Navbar';
-
+import CampaignCard from './components/Card/CampaignCard';
 
 function App() {
-  const user = useContext(ClientContext)
+  const user = useContext(ClientContext);
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [users, setUsers] = useState<Users[]>([]);
@@ -28,13 +28,13 @@ function App() {
   });
 
   async function getUserByEmail(email: string) {
-    const user = await canister.read(email) as any;
+    const user = (await canister.read(email)) as any;
     console.log(user);
     return user[0];
   }
 
   const handleSignIn = async (email: string, password: string) => {
-    const user = await getUserByEmail(email) as Users;
+    const user = (await getUserByEmail(email)) as Users;
     if (user.password === password) {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
@@ -42,24 +42,28 @@ function App() {
     } else {
       alert('Wrong password');
     }
-  }
+  };
 
   const handleLogOut = () => {
     localStorage.removeItem('auth');
     setIsLoggedIn(false);
-  }
+  };
 
   async function readAllUser() {
-    const users = await canister.readAll() as Users[];
+    const users = (await canister.readAll()) as Users[];
     console.log(users);
     setUsers(users);
   }
 
   async function createUser() {
-    await canister.createUser({ username: username, email: email, password: password });
-    setEmail("");
-    setUsername("");
-    setPassword("");
+    await canister.createUser({
+      username: username,
+      email: email,
+      password: password,
+    });
+    setEmail('');
+    setUsername('');
+    setPassword('');
   }
 
   useEffect(() => {
@@ -107,15 +111,26 @@ function App() {
       )}
 
       <div className="card">
-        {users.map((value: any, index: number) => {
-          return (
-            <div key={index}>
-              {value[1].username}, {value[1].email}, {value[1].password}
-            </div>
-          );
-        })}
+         {users.map((value: any, index: number) => {
+           return (
+             <div key={index}>
+               {value[1].username}, {value[1].email}, {value[1].password}
+             </div>
+           );
+         })}
       </div>
     </div>
+//     <CampaignCard
+//       author={'Sherly'}
+//       title={'Main Heading'}
+//       description={
+//         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
+//       }
+//       targetFund={1000000}
+//       currentFund={500000}
+//       totalParticipant={50}
+//       dueDate={'2024-8-24'}
+//     />
   );
 }
 
