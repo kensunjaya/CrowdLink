@@ -3,8 +3,21 @@ import { CampaignInterface } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
+import { afterPayment } from '../../utils/methods';
 
-const CampaignDetails: React.FC<CampaignInterface> = ({
+interface CampaignCardProps {
+  campaignId: number;
+  author: string;
+  title: string;
+  description: string;
+  targetFund: number;
+  currentFund: number;
+  totalParticipant: number;
+  dueDate: string;
+}
+
+const CampaignDetails: React.FC<CampaignCardProps> = ({
+  campaignId,
   author,
   title,
   description,
@@ -29,6 +42,29 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
   };
 
   const client = useContext(ClientContext);
+
+  const handleDonate = async () => {
+    if (Number(amount) < 0.1) {
+      alert('Minimum donation is 0.1 ICP');
+      return;
+    }
+    if (client?.user?.balance! < Number(amount)) {
+      alert('Insufficient balance');
+      return;
+    }
+    else {
+      try {
+        await afterPayment(client?.user?.email!, campaignId, Number(amount));
+        alert('Donation success');
+      }
+      catch (error) {
+        console.error("Error donating:", error);
+        alert('Donation failed');
+        return;
+      }
+    }
+  }
+
   const changeDatetime = () => {
     const date = new Date();
     const currentDate = Math.floor(date.getTime() / 1000);
@@ -77,7 +113,7 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
           <div className="flex flex-row">
             <input type="text" placeholder='Enter amount in ICP..' value={amount} onChange={handleAmountChange} className="py-1 px-3 border border-black rounded-md" />
             {amount && (
-              <button className="bg-black rounded-md ml-3 px-3 py-1 items-center justify-center font-semibold text-white w-fit">
+              <button className="bg-black rounded-md ml-3 px-3 py-1 items-center justify-center font-semibold text-white w-fit" onClick={handleDonate}>
                 {"Donate"}
               </button>
             )}

@@ -101,6 +101,7 @@ function App() {
       {client?.activePage === "login" && (<Login />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
+          campaignId={client.selectedCampaignId}
           author={client.selectedCampaign.author}
           title={client.selectedCampaign.title}
           description={client.selectedCampaign.description}
@@ -202,6 +203,7 @@ function App() {
             return (
               <CampaignCard
                 key={value[0]}
+                campaignId={value[0]}
                 author={value[1].author}
                 title={value[1].title}
                 description={value[1].description}

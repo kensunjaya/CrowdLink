@@ -16,6 +16,9 @@ interface ClientContextType {
   selectedCampaign: CampaignInterface;
   setSelectedCampaign: Function;
 
+  selectedCampaignId: number;
+  setSelectedCampaignId: Function;
+
   allCampaigns: [number, CampaignInterface][];
   setAllCampaigns: Function;
 }
