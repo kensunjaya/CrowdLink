@@ -49,6 +49,7 @@ const Register = () => {
 
     if (valid && username && email && password && confirmpassword) {
       alert('Registration successful!');
+      handleSignUp();
       // Optionally reset form fields
       setUsername('');
       setEmail('');
