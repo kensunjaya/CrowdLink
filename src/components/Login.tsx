@@ -38,6 +38,7 @@ const Login = () => {
 
     if (valid && email && password) {
       alert('Registration successful!');
+      handleSignIn(email, password);
       // Optionally reset form fields
       setEmail('');
       setPassword('');
