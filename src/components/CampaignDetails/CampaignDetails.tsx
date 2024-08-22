@@ -20,8 +20,10 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
   const changeDatetime = () => {
     const date = new Date();
     const currentDate = Math.floor(date.getTime() / 1000);
-    const formattedDueDate = Math.floor(new Date(dueDate).getTime() / 1000);
-    const result = Math.floor((formattedDueDate - currentDate) / 86400);
+    const formattedDate = Math.floor(Number(dueDate) / 1000000000);
+    console.log(currentDate);
+    console.log(formattedDate);
+    const result = Math.floor((formattedDate - currentDate) / 86400);
     return result;
   };
   const [time, setTime] = useState(changeDatetime());
@@ -48,10 +50,10 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
           <div className="text-sm font-semibold text-grays mb-3">
             pledged of US$ {targetFund.toLocaleString()} goal
           </div>
-          <div className="text-xl font-semibold text-grays mb-3">
+          <div className="text-xl font-semibold text-grays">
             {totalParticipant}
           </div>
-          <div className="text-sm font-semibold text-grays">backers</div>
+          <div className="text-sm font-semibold text-grays mb-3">backers</div>
           <div className="text-xl font-semibold text-grays">{time}</div>
           <div className="text-sm font-semibold text-grays mb-3">
             days to go

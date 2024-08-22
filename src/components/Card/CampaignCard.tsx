@@ -22,22 +22,13 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   const changeDatetime = () => {
     const date = new Date();
     const currentDate = Math.floor(date.getTime() / 1000);
-    const formattedDueDate = Math.floor(new Date(dueDate).getTime() / 1000);
-    const result = Math.floor((formattedDueDate - currentDate) / 86400);
+    const formattedDate = Math.floor(Number(dueDate) / 1000000000);
+    const result = Math.floor((formattedDate - currentDate) / 86400);
     return result;
   };
   const [time, setTime] = useState(changeDatetime());
   const [descriptions, setDescriptions] = useState<string>(description);
   const client = useContext(ClientContext);
-  useEffect(() => {
-    const cutDescription = () => {
-      if (description.length > 100) {
-        setDescriptions(description.slice(0, 100) + '...');
-      }
-      setDescriptions(description);
-    };
-    cutDescription();
-  }, []);
 
   const handleClick = () => {
     client?.setActivePage('campaign-details');
@@ -86,7 +77,11 @@ const CampaignCard: React.FC<CampaignInterface> = ({
             {fundPercentage}% Funded
           </div>
         </div>
-        <p className="text-xs font-normal justify-between">{descriptions}</p>
+        <p className="text-xs font-normal justify-between">
+          {descriptions.length > 100
+            ? descriptions.substring(0, 100) + '...'
+            : descriptions}
+        </p>
       </div>
     </button>
   );

@@ -3,7 +3,12 @@ import './App.css';
 import { idlFactory, canisterId } from './declarations/backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
-import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
+import {
+  getAllCampaigns,
+  getUserByEmail,
+  readAllUser,
+  updateCampaign,
+} from './utils/methods';
 import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
@@ -22,7 +27,9 @@ function App() {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
-  const [allCampaigns, setAllCampaigns] = useState<[number, CampaignInterface][]>([]);
+  const [allCampaigns, setAllCampaigns] = useState<
+    [number, CampaignInterface][]
+  >([]);
 
   const agent = new HttpAgent({ host: 'http://localhost:4943' });
   agent.fetchRootKey(); // Remove this in production
@@ -35,7 +42,7 @@ function App() {
   const handleSignIn = async (email: string, password: string) => {
     const user = (await getUserByEmail(email)) as Users;
     if (!user) {
-      alert("User not found");
+      alert('User not found');
       return;
     }
     if (user.password === password) {
@@ -68,25 +75,22 @@ function App() {
     }
   };
 
-  const handleGetCampaigns = async () => {
-    const data = await getAllCampaigns() as [number, CampaignInterface][];
-    data?.forEach(async (element) => {
-      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
-    });
-    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
-    console.log(allCampaigns);
-    setAllCampaigns(allCampaigns);
-  }
-
   useEffect(() => {
-    if (localStorage.getItem('auth')) {
-      setIsLoggedIn(true);
-      const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
-      client?.setUser(user);
-      setEmail(user.email);
-      // setPassword(user.password);
-      setUsername(user.username);
-    }
+    const handleGetCampaigns = async () => {
+      const data = (await getAllCampaigns()) as [number, CampaignInterface][];
+      data?.forEach(async (element) => {
+        await updateCampaign(
+          element[0],
+          Number(element[1].dueDate) - Date.now() * 1000000,
+        );
+      });
+      const allCampaigns = (await getAllCampaigns()) as [
+        number,
+        CampaignInterface,
+      ][];
+      console.log(allCampaigns);
+      setAllCampaigns(allCampaigns);
+    };
     handleGetCampaigns();
   }, []);
 
@@ -211,7 +215,7 @@ function App() {
                 totalParticipant={value[1].totalParticipant}
                 dueDate={value[1].dueDate.toString()}
               />
-            )
+            );
           })}
         </div>
       </div>
