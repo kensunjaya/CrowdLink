@@ -47,7 +47,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
       className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
       onClick={handleClick}
     >
-      <div className="aspect-w-16 aspect-h-10">
+      <div className="aspect-w-16 aspect-h-9">
         <img
           src={DefaultImage}
           alt="campaign"

@@ -17,6 +17,17 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
     // Prevent the click event from propagating to the background
     e.stopPropagation();
   };
+  const [amount, setAmount] = useState<string>('');
+
+  const handleAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const pattern = /^\d*\.?\d*$/;
+
+    if (pattern.test(value)) {
+      setAmount(value);
+    }
+  };
+
   const client = useContext(ClientContext);
   const changeDatetime = () => {
     const date = new Date();
@@ -30,7 +41,7 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
   const [time, setTime] = useState(changeDatetime());
 
   return (
-    <button
+    <div
       className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
       onClick={() => client?.setActivePage('')}
     >
@@ -45,15 +56,15 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
         <img
           src={DefaultImage}
           alt="campaign"
-          className="w-[40%] h-auto bg-cover rounded-l-md"
+          className="w-[40%] h-auto bg-auto rounded-l-md"
         />
         <div className="p-5 text-start items-center">
           <div className="text-3xl font-bold mb-3">{title}</div>
           <div className="text-xl font-semibold text-green-800">
-            US$ {currentFund.toLocaleString()}
+            ICP {currentFund.toLocaleString()}
           </div>
           <div className="text-sm font-semibold text-grays mb-3">
-            pledged of US$ {targetFund.toLocaleString()} goal
+            pledged of ICP {targetFund.toLocaleString()} goal
           </div>
           <div className="text-xl font-semibold text-grays">
             {totalParticipant}
@@ -63,12 +74,17 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
           <div className="text-sm font-semibold text-grays mb-3">
             days to go
           </div>
-          <button className="bg-green-600 rounded-md px-10 py-1 items-center justify-center font-semibold text-white w-full">
-            Back this project
-          </button>
+          <div className="flex flex-row">
+            <input type="text" placeholder='Enter amount in ICP..' value={amount} onChange={handleAmountChange} className="py-1 px-3 border border-black rounded-md" />
+            {amount && (
+              <button className="bg-black rounded-md ml-3 px-3 py-1 items-center justify-center font-semibold text-white w-fit">
+                {"Donate"}
+              </button>
+            )}
+          </div>
         </div>
       </motion.div>
-    </button>
+    </div>
   );
 };
 

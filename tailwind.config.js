@@ -10,5 +10,6 @@ export default {
       ...tokens,
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 };
