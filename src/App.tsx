@@ -3,13 +3,14 @@ import './App.css';
 import { idlFactory, canisterId } from './declarations/backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
-import { Users } from './utils/interfaces';
 import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
 import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
+import { CampaignInterface, Users } from './utils/interfaces';
+import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
   const client = useContext(ClientContext);
@@ -31,9 +32,14 @@ function App() {
 
   const handleSignIn = async (email: string, password: string) => {
     const user = (await getUserByEmail(email)) as Users;
+    if (!user) {
+      alert("User not found");
+      return;
+    }
     if (user.password === password) {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
+      client?.setUser(user);
       setIsLoggedIn(true);
     } else {
       alert('Wrong password');
@@ -60,10 +66,19 @@ function App() {
     }
   };
 
+  const handleGetCampaigns = async () => {
+    const data = await getAllCampaigns() as [number, CampaignInterface][];
+    data?.forEach(async (element) => {
+      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
+    });
+    console.log(data);
+  }
+
   useEffect(() => {
     if (localStorage.getItem('auth')) {
       setIsLoggedIn(true);
       const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
+      client?.setUser(user);
       setEmail(user.email);
       // setPassword(user.password);
       setUsername(user.username);
@@ -176,6 +191,7 @@ function App() {
             </button>
           </div>
         )}
+        <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button>
 
         <div className="card">
           {client?.allUsers?.map((value: any, index: number) => {

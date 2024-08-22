@@ -1,5 +1,8 @@
 import { useContext, useState } from "react";
 import { ClientContext } from "../context/Context";
+import { canister } from "../utils/canister";
+import { createCampaign } from "../utils/methods";
+import { motion } from "framer-motion";
 
 const CreateCampaign = () => {
   const [title, setTitle] = useState<string>('');
@@ -18,6 +21,23 @@ const CreateCampaign = () => {
     }
   };
 
+  const handleCreateCampaign = async () => {
+    const success = await createCampaign(
+      client?.user?.username || "Anonymous",
+      title,
+      description,
+      parseFloat(target),
+      date ? Math.floor(date.getTime() * 1000000) : 0,
+    );
+    if (success) {
+      alert("Campaign created successfully");
+      client?.setActivePage("");
+    }
+    else {
+      alert("Failed to create campaign");
+    }
+  }
+
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to the background
     e.stopPropagation();
@@ -26,8 +46,12 @@ const CreateCampaign = () => {
   return (
     <>
       <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
-        <div
+        <motion.div
           className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+          initial={{scale:0.5}}
+          animate={{scale:1}}
+          exit={{opacity:0, scale:0.5}}
+          transition={{type: 'spring'}}
           onClick={handleCardClick} // Stop propagation here
         >
           <div className="mb-5 text-xl text-center">New Campaign</div>
@@ -60,11 +84,11 @@ const CreateCampaign = () => {
             onChange={(e) => setDate(e.target.value ? new Date(e.target.value) : null)}
           />
           {title && description && target && date && (
-            <button className="bg-black text-white p-2 rounded-lg">
+            <button className="bg-black text-white p-2 rounded-lg" onClick={handleCreateCampaign}>
               Create Campaign
             </button>
           )}
-        </div>
+        </motion.div>
       </div>
     </>
   );
