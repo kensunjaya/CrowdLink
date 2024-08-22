@@ -1,17 +1,16 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import './App.css';
 import { idlFactory, canisterId } from './declarations/backend'
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
+import { Users } from './utils/interfaces';
+import { } from './utils/methods';
+import { ClientContext } from './context/Context'
 
-interface Users {
-  email: string;
-  username: string;
-  password: string;
-}
 
 function App() {
+  const user = useContext(ClientContext)
   const [username, setUsername] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [users, setUsers] = useState<Users[]>([]);
@@ -26,11 +25,6 @@ function App() {
     agent,
     canisterId,
   });
-
-  async function readUser(userId: any) {
-    const user = await canister.read(userId);
-    console.log('User data:', user);
-  }
 
   async function getUserByEmail(email: string) {
     const user = await canister.read(email) as any;
