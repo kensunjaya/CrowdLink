@@ -9,8 +9,21 @@ interface ClientProviderProps {
 
 export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const [user, setUser] = useState<Users | null>(null);
+  const [allUsers, setAllUsers] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
+  const [showCreateCampaign, setShowCreateCampaign] = useState<boolean>(false);
 
-  return <ClientContext.Provider value={{ user, isLoading, isLoggedIn, setUser, setIsLoading, setIsLoggedIn }}>{children}</ClientContext.Provider>;
+  return <ClientContext.Provider value={{
+    allUsers,
+    user,
+    isLoading,
+    isLoggedIn,
+    showCreateCampaign,
+    setUser,
+    setAllUsers,
+    setIsLoading,
+    setIsLoggedIn,
+    setShowCreateCampaign
+  }}>{children}</ClientContext.Provider>;
 };
