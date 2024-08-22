@@ -23,7 +23,7 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
       onClick={() => client?.setActivePage('')}
     >
       <div
-        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+        className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90"
         onClick={handleCardClick} // Stop propagation here
       >
         <div className="mb-5 text-xl text-center">{author}</div>
