@@ -5,9 +5,14 @@ interface ClientContextType {
   isLoggedIn: boolean,
   isLoading: boolean,
   user: Users | null,
+  allUsers: any | [],
+  setAllUsers: Function,
   setUser: Function,
   setIsLoggedIn: Function,
   setIsLoading: Function,
+
+  showCreateCampaign: boolean,
+  setShowCreateCampaign: Function,
 }
 
 
