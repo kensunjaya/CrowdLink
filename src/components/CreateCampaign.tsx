@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
 import { ClientContext } from "../context/Context";
+import { canister } from "../utils/canister";
+import { createCampaign } from "../utils/methods";
 
 const CreateCampaign = () => {
   const [title, setTitle] = useState<string>('');
@@ -17,6 +19,23 @@ const CreateCampaign = () => {
       setTarget(value);
     }
   };
+
+  const handleCreateCampaign = async () => {
+    const success = await createCampaign(
+      client?.user?.username || "Anonymous",
+      title,
+      description,
+      parseFloat(target),
+      date ? Math.floor(date.getTime() * 1000000) : 0,
+    );
+    if (success) {
+      alert("Campaign created successfully");
+      client?.setActivePage("");
+    }
+    else {
+      alert("Failed to create campaign");
+    }
+  }
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to the background
@@ -60,7 +79,7 @@ const CreateCampaign = () => {
             onChange={(e) => setDate(e.target.value ? new Date(e.target.value) : null)}
           />
           {title && description && target && date && (
-            <button className="bg-black text-white p-2 rounded-lg">
+            <button className="bg-black text-white p-2 rounded-lg" onClick={handleCreateCampaign}>
               Create Campaign
             </button>
           )}

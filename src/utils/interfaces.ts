@@ -2,6 +2,7 @@ export interface Users {
   email: string;
   username: string;
   password: string;
+  balance: number;
 }
 
 export interface CampaignInterface {
