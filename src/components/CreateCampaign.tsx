@@ -48,7 +48,10 @@ const CreateCampaign = () => {
 
   return (
     <>
-      <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
+      <div
+        className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+        onClick={() => client?.setActivePage('')}
+      >
         <motion.div
           className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
           initial={{ scale: 0.5 }}
@@ -84,10 +87,15 @@ const CreateCampaign = () => {
             className="py-1 px-3 border border-black rounded-md mb-5"
             type="date"
             value={date ? date.toISOString().split('T')[0] : ''}
-            onChange={(e) => setDate(e.target.value ? new Date(e.target.value) : null)}
+            onChange={(e) =>
+              setDate(e.target.value ? new Date(e.target.value) : null)
+            }
           />
           {title && description && target && date && (
-            <button className="bg-black text-white p-2 rounded-lg" onClick={handleCreateCampaign}>
+            <button
+              className="bg-black text-white p-2 rounded-lg"
+              onClick={handleCreateCampaign}
+            >
               Create Campaign
             </button>
           )}

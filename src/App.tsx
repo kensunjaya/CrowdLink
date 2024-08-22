@@ -3,11 +3,18 @@ import './App.css';
 import { idlFactory, canisterId } from './declarations/backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
-import { getAllCampaigns, getUserByEmail, readAllUser, updateCampaign } from './utils/methods';
+import {
+  getAllCampaigns,
+  getUserByEmail,
+  readAllUser,
+  updateCampaign,
+} from './utils/methods';
 import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
+import Register from './components/Register';
+import Login from './components/Login';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -33,7 +40,7 @@ function App() {
   const handleSignIn = async (email: string, password: string) => {
     const user = (await getUserByEmail(email)) as Users;
     if (!user) {
-      alert("User not found");
+      alert('User not found');
       return;
     }
     if (user.password === password) {
@@ -90,6 +97,9 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center">
+      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      {client?.activePage === "register" && (<Register />)}
+      {client?.activePage === "login" && (<Login />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
           author={client.selectedCampaign.author}
@@ -101,7 +111,6 @@ function App() {
           dueDate={client.selectedCampaign.dueDate}
         />
       )}
-      {client?.activePage === 'create-campaign' && <CreateCampaign />}
       <div className="w-[60%] h-full bg-white">
         <div className="flex flex-col space-y-5">
           <Navbar />
@@ -202,7 +211,7 @@ function App() {
                 totalParticipant={value[1].totalParticipant}
                 dueDate={value[1].dueDate.toString()}
               />
-            )
+            );
           })}
         </div>
       </div>
