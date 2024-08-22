@@ -2,6 +2,7 @@ import { useContext, useState } from 'react';
 import { CampaignInterface } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
+import { motion } from 'framer-motion';
 
 const CampaignDetails: React.FC<CampaignInterface> = ({
   author,
@@ -33,8 +34,12 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
       className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
       onClick={() => client?.setActivePage('')}
     >
-      <div
+      <motion.div
         className="min-w-[25rem] max-w-[50rem] min-h-[20vh] flex flex-row bg-white shadow-lg rounded-md"
+        initial={{ scale: 0.5 }}
+        animate={{ scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        transition={{ type: 'spring' }}
         onClick={handleCardClick} // Stop propagation here
       >
         <img
@@ -62,7 +67,7 @@ const CampaignDetails: React.FC<CampaignInterface> = ({
             Back this project
           </button>
         </div>
-      </div>
+      </motion.div>
     </button>
   );
 };

@@ -1,6 +1,7 @@
-import React from "react";
-import { useContext, useState } from "react";
-import { ClientContext } from "../context/Context";
+import React from 'react';
+import { useContext, useState } from 'react';
+import { ClientContext } from '../context/Context';
+import { motion } from 'framer-motion';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -9,7 +10,9 @@ const Register = () => {
   const [confirmpassword, setConfirmpassword] = useState<string>('');
   const [emailError, setEmailError] = useState<string | null>(null);
   const [passwordError, setPasswordError] = useState<string | null>(null);
-  const [confirmPasswordError, setConfirmPasswordError] = useState<string | null>(null);
+  const [confirmPasswordError, setConfirmPasswordError] = useState<
+    string | null
+  >(null);
 
   const client = useContext(ClientContext);
 
@@ -26,8 +29,9 @@ const Register = () => {
     setConfirmPasswordError(null);
 
     // email pattern validation
-    let pattern = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-    if (!pattern.test(email)) { 
+    let pattern =
+      /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
+    if (!pattern.test(email)) {
       setEmailError('Invalid email');
       valid = false;
     }
@@ -49,7 +53,7 @@ const Register = () => {
       setEmail('');
       setPassword('');
       setConfirmpassword('');
-      client?.setActivePage(""); // Close the modal
+      client?.setActivePage(''); // Close the modal
     }
   };
 
@@ -59,9 +63,16 @@ const Register = () => {
   };
 
   return (
-    <div className="flex fixed bg-transparent w-full h-full items-center justify-center" onClick={() => client?.setActivePage("")}>
-      <div
+    <div
+      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+      onClick={() => client?.setActivePage('')}
+    >
+      <motion.div
         className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg opacity-90 z-10"
+        initial={{ scale: 0.5 }}
+        animate={{ scale: 1 }}
+        exit={{ opacity: 0, scale: 0.5 }}
+        transition={{ type: 'spring' }}
         onClick={handleCardClick}
       >
         <div className="mb-5 text-xl text-center">REGISTER</div>
@@ -74,38 +85,59 @@ const Register = () => {
         />
         <div className="mb-1 text-xs">Email</div>
         <input
-          className={`py-1 px-3 border ${emailError ? 'border-red-500' : 'border-black'} rounded-md mb-1`}
+          className={`py-1 px-3 border ${
+            emailError ? 'border-red-500' : 'border-black'
+          } rounded-md mb-1`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
         />
-        {emailError && <div className="text-red-500 text-xs mb-1">{emailError}</div>}
+        {emailError && (
+          <div className="text-red-500 text-xs mb-1">{emailError}</div>
+        )}
         <div className="mb-1 text-xs">Password</div>
         <input
-          className={`py-1 px-3 border ${passwordError ? 'border-red-500' : 'border-black'} rounded-md mb-1`}
+          className={`py-1 px-3 border ${
+            passwordError ? 'border-red-500' : 'border-black'
+          } rounded-md mb-1`}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {passwordError && <div className="text-red-500 text-xs mb-1">{passwordError}</div>}
+        {passwordError && (
+          <div className="text-red-500 text-xs mb-1">{passwordError}</div>
+        )}
         <div className="mb-1 text-xs">Confirm Password</div>
         <input
-          className={`py-1 px-3 border ${confirmPasswordError ? 'border-red-500' : 'border-black'} rounded-md mb-1`}
+          className={`py-1 px-3 border ${
+            confirmPasswordError ? 'border-red-500' : 'border-black'
+          } rounded-md mb-1`}
           type="password"
           value={confirmpassword}
           onChange={(e) => setConfirmpassword(e.target.value)}
         />
-        {confirmPasswordError && <div className="text-red-500 text-xs mb-1">{confirmPasswordError}</div>}
+        {confirmPasswordError && (
+          <div className="text-red-500 text-xs mb-1">
+            {confirmPasswordError}
+          </div>
+        )}
         <div className="flex pt-2 pb-2 justify-end">
-        <div className="pr-2 text-sm">Already have an account?</div>
-            <button type="button" onClick={() => client?.setActivePage("login")} className="text-black text-sm underline hover:cursor-pointer">
-              Login here
-            </button>
-        </div>
-          <button className="mt-2 bg-black text-white p-2 rounded-lg" onClick={onSubmit}>
-            Register
+          <div className="pr-2 text-sm">Already have an account?</div>
+          <button
+            type="button"
+            onClick={() => client?.setActivePage('login')}
+            className="text-black text-sm underline hover:cursor-pointer"
+          >
+            Login here
           </button>
-      </div>
+        </div>
+        <button
+          className="mt-2 bg-black text-white p-2 rounded-lg"
+          onClick={onSubmit}
+        >
+          Register
+        </button>
+      </motion.div>
     </div>
   );
 };
