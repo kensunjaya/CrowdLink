@@ -66,7 +66,7 @@ function App() {
 
   return (
     <div className="w-screen min-h-screen flex flex-col items-center py-10">
-      {client?.showCreateCampaign && (<CreateCampaign />)}
+      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       <div className="w-[60%] h-full bg-white">
         <div className="flex flex-col space-y-5">
           <Navbar />
@@ -104,9 +104,6 @@ function App() {
             }}>
               Refetch users
             </button>
-            <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={async () => {
-              client?.setShowCreateCampaign(true);
-            }}>Create Campaign</button>
           </div>
         )}
 

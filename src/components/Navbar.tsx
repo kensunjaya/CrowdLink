@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useContext } from "react";
 import Search from "./Search";
+import { ClientContext } from "../context/Context";
 
 const Navbar: React.FC = () => {
+    const client = useContext(ClientContext);
     return (
         <nav className="bg-white shadow-md fixed top-5 left-20 right-20 z-50 rounded-lg">
             <div className="container mx-auto px-3 py-2 flex justify-between items-center">
@@ -25,9 +27,9 @@ const Navbar: React.FC = () => {
                 </div>
 
                 <div className="hidden md:flex space-x-8">
-                    <a href="#" className="text-gray-700 hover:text-gray-300">
+                    <button className="text-gray-700 hover:text-gray-300" onClick={() => client?.setActivePage("create-campaign")}>
                         Start a Campaign
-                    </a>
+                    </button>
                 </div>
 
                 <div className="flex items-center space-x-4">
