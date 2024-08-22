@@ -6,7 +6,8 @@ import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
 import { Users } from './utils/interfaces';
 import { } from './utils/methods';
-import { ClientContext } from './context/Context'
+import { ClientContext } from './context/Context';
+import Navbar from './components/Navbar';
 
 
 function App() {
@@ -73,6 +74,9 @@ function App() {
 
   return (
     <div className="w-full min-h-screen bg-white">
+      <div className="flex flex-col space-y-5">
+        <Navbar />
+      </div>
       <button className="bg-black text-white w-fit p-2 rounded-lg mb-5" onClick={() => setIsLoginPage(!isLoginPage)}>Switch mode</button>
       {isLoggedIn && (
         <div className="flex flex-col space-y-5">
