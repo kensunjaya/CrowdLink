@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { CampaignInterface } from '../../utils/interfaces';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { IoIosPerson } from 'react-icons/io';
 import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
+import { ClientContext } from '../../context/Context';
 
 const CampaignCard: React.FC<CampaignInterface> = ({
   author,
@@ -27,6 +28,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   };
   const [time, setTime] = useState(changeDatetime());
   const [descriptions, setDescriptions] = useState<string>(description);
+  const client = useContext(ClientContext);
   useEffect(() => {
     const cutDescription = () => {
       if (description.length > 100) {
@@ -36,8 +38,24 @@ const CampaignCard: React.FC<CampaignInterface> = ({
     };
     cutDescription();
   }, []);
+
+  const handleClick = () => {
+    client?.setActivePage('campaign-details');
+    client?.setSelectedCampaign({
+      author,
+      title,
+      description,
+      targetFund,
+      currentFund,
+      totalParticipant,
+      dueDate,
+    });
+  };
   return (
-    <button className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm">
+    <button
+      className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
+      onClick={handleClick}
+    >
       <div className="aspect-w-16 aspect-h-10">
         <img
           src={DefaultImage}
