@@ -1,14 +1,22 @@
 import { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { idlFactory, canisterId } from './declarations/backend'
+import { idlFactory, canisterId } from './declarations/backend';
 import { Actor, HttpAgent } from '@dfinity/agent';
 import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
-import { Users } from './utils/interfaces';
-import { getAllCampaigns, getUserByEmail, readAllUser } from './utils/methods';
-import { ClientContext } from './context/Context'
+import {
+  getAllCampaigns,
+  getUserByEmail,
+  readAllUser,
+  updateCampaign,
+} from './utils/methods';
+import { ClientContext } from './context/Context';
 import CreateCampaign from './components/CreateCampaign';
 import Navbar from './components/Navbar';
 import CampaignCard from './components/Card/CampaignCard';
+import Register from './components/Register';
+import Login from './components/Login';
+import CampaignDetails from './components/CampaignDetails/CampaignDetails';
+import { CampaignInterface, Users } from './utils/interfaces';
 import { motion, AnimatePresence } from 'framer-motion';
 
 function App() {
@@ -31,9 +39,14 @@ function App() {
 
   const handleSignIn = async (email: string, password: string) => {
     const user = (await getUserByEmail(email)) as Users;
+    if (!user) {
+      alert('User not found');
+      return;
+    }
     if (user.password === password) {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
+      client?.setUser(user);
       setIsLoggedIn(true);
     } else {
       alert('Wrong password');
@@ -46,90 +59,163 @@ function App() {
   };
 
   const handleSignUp = async () => {
-    const success = await canister.createUser({ username: username, email: email, password: password, balance: 0 });
+    const success = await canister.createUser({
+      username: username,
+      email: email,
+      password: password,
+      balance: 0,
+    });
     if (success) {
       setIsLoginPage(true);
-      setEmail("");
-      setUsername("");
-      setPassword("");
+      setEmail('');
+      setUsername('');
+      setPassword('');
     }
+  };
+
+  const handleGetCampaigns = async () => {
+    const data = await getAllCampaigns() as [number, CampaignInterface][];
+    data?.forEach(async (element) => {
+      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
+    });
+    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
+    console.log(allCampaigns);
+    client?.setAllCampaigns(allCampaigns);
   }
 
   useEffect(() => {
     if (localStorage.getItem('auth')) {
       setIsLoggedIn(true);
       const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
+      client?.setUser(user);
       setEmail(user.email);
       // setPassword(user.password);
       setUsername(user.username);
     }
+    handleGetCampaigns();
   }, []);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center py-10">
+    <div className="w-screen min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      {client?.activePage === "register" && (<Register />)}
+      {client?.activePage === "login" && (<Login />)}
+      {client?.activePage === 'campaign-details' && client.selectedCampaign && (
+        <CampaignDetails
+          author={client.selectedCampaign.author}
+          title={client.selectedCampaign.title}
+          description={client.selectedCampaign.description}
+          targetFund={client.selectedCampaign.targetFund}
+          currentFund={client.selectedCampaign.currentFund}
+          totalParticipant={client.selectedCampaign.totalParticipant}
+          dueDate={client.selectedCampaign.dueDate}
+        />
+      )}
       <div className="w-[60%] h-full bg-white">
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        <button className="bg-black text-white w-fit p-2 rounded-lg mb-5" onClick={() => setIsLoginPage(!isLoginPage)}>Switch mode</button>
         {isLoggedIn && (
-          <div className="flex flex-col space-y-5">
+          <div className="flex flex-col space-y-5 mt-[8rem]">
             <div className="text-3xl">Welcome {username}</div>
-            <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleLogOut()}>Logout</button>
+            <button
+              className="bg-black text-white w-fit p-2 rounded-lg"
+              onClick={() => handleLogOut()}
+            >
+              Logout
+            </button>
           </div>
         )}
         {!isLoggedIn && (
           <div className="flex flex-col space-y-3">
             {isLoginPage && (
               <>
-                <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={() => handleSignIn(email, password)}>Sign In</button>
+                <input
+                  placeholder="email"
+                  className="py-1 px-3 border border-black rounded-md"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  placeholder="password"
+                  className="py-1 px-3 border border-black rounded-md"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  className="bg-black text-white w-fit p-2 rounded-lg"
+                  onClick={() => handleSignIn(email, password)}
+                >
+                  Sign In
+                </button>
               </>
             )}
             {!isLoginPage && (
               <>
-                <input placeholder="username" className="py-1 px-3 border border-black rounded-md" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-                <input placeholder="email" className="py-1 px-3 border border-black rounded-md" type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-                <input placeholder="password" className="py-1 px-3 border border-black rounded-md" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-                <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleSignUp}>Sign Up</button>
+                <input
+                  placeholder="username"
+                  className="py-1 px-3 border border-black rounded-md"
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                />
+                <input
+                  placeholder="email"
+                  className="py-1 px-3 border border-black rounded-md"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <input
+                  placeholder="password"
+                  className="py-1 px-3 border border-black rounded-md"
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <button
+                  className="bg-black text-white w-fit p-2 rounded-lg"
+                  onClick={handleSignUp}
+                >
+                  Sign Up
+                </button>
               </>
             )}
-            <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={async () => {
-              const value = await readAllUser();
-              console.log('user: ', client);
-              client?.setAllUsers(value);
-              setUsers(value as Users[] ?? []);
-              console.log(client?.allUsers);
-            }}>
+            <button
+              className="bg-black text-white w-fit p-2 rounded-lg"
+              onClick={async () => {
+                const value = await readAllUser();
+                console.log('user: ', client);
+                client?.setAllUsers(value);
+                setUsers((value as Users[]) ?? []);
+                console.log(client?.allUsers);
+              }}
+            >
               Refetch users
             </button>
           </div>
         )}
-
-        <div className="card">
-          {client?.allUsers?.map((value: any, index: number) => {
+        {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button> */}
+        <div className="flex space-x-3 mt-10">
+          {client?.allCampaigns.map((value) => {
             return (
-              <div key={index}>
-                {value[1].username}, {value[1].email}, {value[1].password}
-              </div>
+              <CampaignCard
+                key={value[0]}
+                author={value[1].author}
+                title={value[1].title}
+                description={value[1].description}
+                targetFund={value[1].targetFund}
+                currentFund={value[1].currentFund}
+                totalParticipant={value[1].totalParticipant}
+                dueDate={value[1].dueDate.toString()}
+              />
             );
           })}
         </div>
       </div>
     </div>
-    //     <CampaignCard
-    //       author={'Sherly'}
-    //       title={'Main Heading'}
-    //       description={
-    //         'Lorem Ipsum aosdkasodkasodkasodaksdoa kasodkasodkasodas dasodasdoadk'
-    //       }
-    //       targetFund={1000000}
-    //       currentFund={500000}
-    //       totalParticipant={50}
-    //       dueDate={'2024-8-24'}
-    //     />
   );
 }
 

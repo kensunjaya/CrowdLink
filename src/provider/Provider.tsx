@@ -1,6 +1,6 @@
-import React, { useEffect, useState, ReactNode } from "react";
-import { Users } from "../utils/interfaces";
-import { ClientContext } from "../context/Context";
+import React, { useEffect, useState, ReactNode } from 'react';
+import { CampaignInterface, Users } from '../utils/interfaces';
+import { ClientContext } from '../context/Context';
 
 // Define the props interface, including children
 interface ClientProviderProps {
@@ -12,18 +12,39 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const [allUsers, setAllUsers] = useState<any>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [activePage, setActivePage] = useState<string>("");
+  const [activePage, setActivePage] = useState<string>('');
+  const [allCampaigns, setAllCampaigns] = useState<[number, CampaignInterface][]>([]);
 
-  return <ClientContext.Provider value={{
-    allUsers,
-    user,
-    isLoading,
-    isLoggedIn,
-    activePage,
-    setUser,
-    setAllUsers,
-    setIsLoading,
-    setIsLoggedIn,
-    setActivePage
-  }}>{children}</ClientContext.Provider>;
+  const [selectedCampaign, setSelectedCampaign] = useState<CampaignInterface>({
+    author: '',
+    title: '',
+    description: '',
+    targetFund: 0,
+    currentFund: 0,
+    totalParticipant: 0,
+    dueDate: '',
+  });
+
+  return (
+    <ClientContext.Provider
+      value={{
+        allUsers,
+        user,
+        isLoading,
+        isLoggedIn,
+        activePage,
+        allCampaigns,
+        selectedCampaign,
+        setUser,
+        setAllUsers,
+        setIsLoading,
+        setIsLoggedIn,
+        setActivePage,
+        setSelectedCampaign,
+        setAllCampaigns
+      }}
+    >
+      {children}
+    </ClientContext.Provider>
+  );
 };

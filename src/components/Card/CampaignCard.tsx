@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { CampaignInterface } from '../../utils/interfaces';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { IoIosPerson } from 'react-icons/io';
 import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
+import { ClientContext } from '../../context/Context';
 
 const CampaignCard: React.FC<CampaignInterface> = ({
   author,
@@ -21,24 +22,32 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   const changeDatetime = () => {
     const date = new Date();
     const currentDate = Math.floor(date.getTime() / 1000);
-    const formattedDueDate = Math.floor(new Date(dueDate).getTime() / 1000);
-    const result = Math.floor((formattedDueDate - currentDate) / 86400);
+    const formattedDate = Math.floor(Number(dueDate) / 1000000000);
+    const result = Math.floor((formattedDate - currentDate) / 86400);
     return result;
   };
   const [time, setTime] = useState(changeDatetime());
   const [descriptions, setDescriptions] = useState<string>(description);
-  useEffect(() => {
-    const cutDescription = () => {
-      if (description.length > 100) {
-        setDescriptions(description.slice(0, 100) + '...');
-      }
-      setDescriptions(description);
-    };
-    cutDescription();
-  }, []);
+  const client = useContext(ClientContext);
+
+  const handleClick = () => {
+    client?.setActivePage('campaign-details');
+    client?.setSelectedCampaign({
+      author,
+      title,
+      description,
+      targetFund,
+      currentFund,
+      totalParticipant,
+      dueDate,
+    });
+  };
   return (
-    <button className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm">
-      <div className="relative aspect-w-16 aspect-h-10">
+    <button
+      className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
+      onClick={handleClick}
+    >
+      <div className="aspect-w-16 aspect-h-10">
         <img
           src={DefaultImage}
           alt="campaign"
@@ -56,7 +65,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
         <div className="text-xs font-semibold text-grays">{author}</div>
         <div className="flex flex-row items-center">
           <TbClockHour4 className=" mt-1" />
-          {time === 0 ? (
+          {time !== 0 ? (
             <div className="text-sm mx-1 font-semibold ">{time} days left</div>
           ) : (
             <div className="text-sm mx-1 font-semibold ">
@@ -68,7 +77,11 @@ const CampaignCard: React.FC<CampaignInterface> = ({
             {fundPercentage}% Funded
           </div>
         </div>
-        <p className="text-xs font-normal justify-between">{descriptions}</p>
+        <p className="text-xs font-normal justify-between">
+          {descriptions.length > 100
+            ? descriptions.substring(0, 100) + '...'
+            : descriptions}
+        </p>
       </div>
     </button>
   );
