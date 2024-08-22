@@ -3,6 +3,8 @@ import Iter "mo:base/Iter";
 import Text "mo:base/Text";
 import Option "mo:base/Option";
 import Nat32 "mo:base/Nat32";
+import Time "mo:base/Time";
+import Bool "mo:base/Bool";
 
 import Types "Types";
 import Utils "Utils";
@@ -20,6 +22,7 @@ actor {
 
     stable var users : Users = Trie.empty();
     stable var campaigns : Campaigns = Trie.empty();
+    // stable var timeRemainings : TimeRemainings = Trie.empty();
 
     public func createUser(user : User) : async UserId {
         let userId = user.email;
@@ -76,7 +79,20 @@ actor {
     return data;
   };
 
-  public func createCampaign(campaign: Campaign) : async () {
+  public func createCampaign(author : UserId, title: Text, dueDate : Time.Time, description : Text, targetFund : Float) : async () {
+
+    let campaign : Campaign = {
+      author = author;
+      title = title;
+      description = description;
+      targetFund = targetFund;
+      currentFund = 0;
+      totalParticipant = 0;
+      dateCreated = Time.now();
+      dueDate = dueDate;
+      status = "Pending";
+    };
+
     campaigns := Trie.replace(
         campaigns,
         Utils.campaignKey(campaignId),
@@ -86,8 +102,36 @@ actor {
     campaignId += 1;
   };
 
+  public func updateCampaign(campaignId : CampaignId, timeRemaining : Time.Time) : async () {
+    let resultCampaign = Trie.find(campaigns, Utils.campaignKey(campaignId), Nat32.equal);
+
+    switch (resultCampaign) {
+        case (?resultCampaign) {
+          let setCampaignStatus : Campaign = {
+            author = resultCampaign.author;
+            title = resultCampaign.title;
+            description = resultCampaign.description;
+            targetFund = resultCampaign.targetFund;
+            currentFund = resultCampaign.currentFund;
+            totalParticipant = resultCampaign.totalParticipant;
+            dueDate = resultCampaign.dueDate;
+            status = Utils.campaignStatus(resultCampaign, timeRemaining);
+          };
+          campaigns := Trie.replace(
+            campaigns,
+            Utils.campaignKey(campaignId),
+            Nat32.equal,
+            ?setCampaignStatus,
+          ).0;
+
+        };
+        case null {};
+    };
+  };
+
   public query func readAllCampaign() : async [(CampaignId, Campaign)] {
     let resultAllData = Iter.toArray(Trie.iter(campaigns));
+
     return resultAllData;
   };
 

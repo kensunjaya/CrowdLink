@@ -1,8 +1,8 @@
 import Text "mo:base/Text";
 import Trie "mo:base/Trie";
 import Float "mo:base/Float";
-import Time "mo:base/Time";
 import Nat32 "mo:base/Nat32";
+import Time "mo:base/Time";
 
 module {
     // Campaign Type
@@ -17,6 +17,7 @@ module {
         currentFund : Float;
         totalParticipant : Nat32;
         dueDate : Time.Time;
+        status : Text;
     };
 
     public type Campaigns = Trie.Trie<CampaignId, Campaign>;

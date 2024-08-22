@@ -30,13 +30,14 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   useEffect(() => {
     const cutDescription = () => {
       if (description.length > 100) {
-        return description.slice(0, 100) + '...';
+        setDescriptions(description.slice(0, 100) + '...');
       }
-      return description;
+      setDescriptions(description);
     };
-  });
+    cutDescription();
+  }, []);
   return (
-    <div className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm">
+    <button className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm">
       <div className="relative aspect-w-16 aspect-h-10">
         <img
           src={DefaultImage}
@@ -69,7 +70,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
         </div>
         <p className="text-xs font-normal justify-between">{descriptions}</p>
       </div>
-    </div>
+    </button>
   );
 };
 
