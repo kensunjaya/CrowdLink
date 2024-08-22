@@ -28,9 +28,6 @@ function App() {
   const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
-  const [allCampaigns, setAllCampaigns] = useState<
-    [number, CampaignInterface][]
-  >([]);
 
   const agent = new HttpAgent({ host: 'http://localhost:4943' });
   agent.fetchRootKey(); // Remove this in production
@@ -76,27 +73,30 @@ function App() {
     }
   };
 
+  const handleGetCampaigns = async () => {
+    const data = await getAllCampaigns() as [number, CampaignInterface][];
+    data?.forEach(async (element) => {
+      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
+    });
+    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
+    console.log(allCampaigns);
+    client?.setAllCampaigns(allCampaigns);
+  }
+
   useEffect(() => {
-    const handleGetCampaigns = async () => {
-      const data = (await getAllCampaigns()) as [number, CampaignInterface][];
-      data?.forEach(async (element) => {
-        await updateCampaign(
-          element[0],
-          Number(element[1].dueDate) - Date.now() * 1000000,
-        );
-      });
-      const allCampaigns = (await getAllCampaigns()) as [
-        number,
-        CampaignInterface,
-      ][];
-      console.log(allCampaigns);
-      setAllCampaigns(allCampaigns);
-    };
+    if (localStorage.getItem('auth')) {
+      setIsLoggedIn(true);
+      const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
+      client?.setUser(user);
+      setEmail(user.email);
+      // setPassword(user.password);
+      setUsername(user.username);
+    }
     handleGetCampaigns();
   }, []);
 
   return (
-    <div className="w-screen min-h-screen flex flex-col items-center py-10">
+    <div className="w-screen min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
       {client?.activePage === "login" && (<Login />)}
@@ -115,14 +115,8 @@ function App() {
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        <button
-          className="bg-black text-white w-fit p-2 rounded-lg mb-5"
-          onClick={() => setIsLoginPage(!isLoginPage)}
-        >
-          Switch mode
-        </button>
         {isLoggedIn && (
-          <div className="flex flex-col space-y-5">
+          <div className="flex flex-col space-y-5 mt-[8rem]">
             <div className="text-3xl">Welcome {username}</div>
             <button
               className="bg-black text-white w-fit p-2 rounded-lg"
@@ -205,7 +199,7 @@ function App() {
         )}
         {/* <button className="bg-black text-white w-fit p-2 rounded-lg" onClick={handleGetCampaigns}>Test</button> */}
         <div className="flex space-x-3 mt-10">
-          {allCampaigns.map((value) => {
+          {client?.allCampaigns.map((value) => {
             return (
               <CampaignCard
                 key={value[0]}

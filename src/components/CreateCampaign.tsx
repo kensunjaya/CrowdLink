@@ -1,8 +1,8 @@
-import { useContext, useState } from 'react';
-import { ClientContext } from '../context/Context';
-import { canister } from '../utils/canister';
-import { createCampaign } from '../utils/methods';
-import { motion } from 'framer-motion';
+import { useContext, useState } from "react";
+import { ClientContext } from "../context/Context";
+import { canister } from "../utils/canister";
+import { createCampaign, fetchCampaigns } from "../utils/methods";
+import { motion } from "framer-motion";
 
 const CreateCampaign = () => {
   const [title, setTitle] = useState<string>('');
@@ -23,19 +23,23 @@ const CreateCampaign = () => {
 
   const handleCreateCampaign = async () => {
     const success = await createCampaign(
-      client?.user?.username || 'Anonymous',
+      client?.user?.username || "Anonymous",
       title,
       description,
       parseFloat(target),
       date ? Math.floor(date.getTime() * 1000000) : 0,
     );
     if (success) {
-      alert('Campaign created successfully');
-      client?.setActivePage('');
-    } else {
-      alert('Failed to create campaign');
+      alert("Campaign created successfully");
+      client?.setActivePage("");
+      await fetchCampaigns().then((data) => {
+        client?.setAllCampaigns(data);
+      })
     }
-  };
+    else {
+      alert("Failed to create campaign");
+    }
+  }
 
   const handleCardClick = (e: React.MouseEvent<HTMLDivElement>) => {
     // Prevent the click event from propagating to the background
