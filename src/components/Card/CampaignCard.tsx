@@ -90,7 +90,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
             <div className="text-sm font-semibold text-grays">{author}</div>
             <div className="flex flex-row items-center">
               <TbClockHour4 className=" mt-1" />
-              {time === 0 ? (
+              {time > 1 ? (
                 <div className="text-sm mx-1 font-semibold ">
                   {time} days left
                 </div>
@@ -101,7 +101,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
               )}
               <BsDot className="mt-1" />
               <div className="text-sm mx-1 font-semibold ">
-                {fundPercentage.toPrecision(2)}% funded
+                {Math.round(fundPercentage)}% funded
               </div>
             </div>
             <p className="text-sm mt-2 font-normal justify-between">

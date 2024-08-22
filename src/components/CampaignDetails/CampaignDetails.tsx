@@ -97,10 +97,10 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
         <div className="p-5 text-start items-center">
           <div className="text-3xl font-bold mb-3">{title}</div>
           <div className="text-xl font-semibold text-green-800">
-            ICP {currentFund.toLocaleString()}
+            Goal: {targetFund.toLocaleString()} ICP
           </div>
           <div className="text-sm font-semibold text-grays mb-3">
-            pledged of ICP {targetFund.toLocaleString()} goal
+            Currently funded: {currentFund.toLocaleString()} ICP
           </div>
           <div className="text-xl font-semibold text-grays">
             {totalParticipant}
