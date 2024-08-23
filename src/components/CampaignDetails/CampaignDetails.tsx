@@ -3,7 +3,6 @@ import { CampaignInterface } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
-import { afterPayment } from '../../utils/methods';
 import { InfinitySpin } from 'react-loader-spinner';
 import { afterPayment, getAllCampaigns, updateCampaign } from '../../utils/methods';
 
@@ -100,9 +99,9 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
       onClick={() => client?.setActivePage('')}
     >
       {client?.isLoading && (
-          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
-              <InfinitySpin color='#808080'/>
-          </div>
+        <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+          <InfinitySpin color='#808080' />
+        </div>
       )};
       <motion.div
         className="min-w-[25rem] max-w-[50rem] min-h-[20vh] flex flex-row bg-white shadow-lg rounded-md"
