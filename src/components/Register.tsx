@@ -55,7 +55,7 @@ const Register = () => {
       setEmail('');
       setPassword('');
       setConfirmpassword('');
-      client?.setActivePage(''); // Close the modal
+      client?.setActivePage('login'); // Close the modal
     }
   };
 
@@ -101,9 +101,8 @@ const Register = () => {
         />
         <div className="mb-1 text-xs">Email</div>
         <input
-          className={`py-1 px-3 border ${
-            emailError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${emailError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
@@ -113,9 +112,8 @@ const Register = () => {
         )}
         <div className="mb-1 text-xs">Password</div>
         <input
-          className={`py-1 px-3 border ${
-            passwordError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${passwordError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
@@ -125,9 +123,8 @@ const Register = () => {
         )}
         <div className="mb-1 text-xs">Confirm Password</div>
         <input
-          className={`py-1 px-3 border ${
-            confirmPasswordError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${confirmPasswordError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           type="password"
           value={confirmpassword}
           onChange={(e) => setConfirmpassword(e.target.value)}

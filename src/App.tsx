@@ -28,7 +28,7 @@ function App() {
   const [password, setPassword] = useState<string>('');
   const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
+  const [viewAllCampaign, setViewAllCampaign] = useState<boolean>(false);
 
   const agent = new HttpAgent({ host: 'http://localhost:4943' });
   agent.fetchRootKey(); // Remove this in production
@@ -88,7 +88,13 @@ function App() {
     if (localStorage.getItem('auth')) {
       setIsLoggedIn(true);
       const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
-      client?.setUser(user);
+      user.balance = parseFloat(user.balance as unknown as string); // Force balance to be a number
+      client?.setUser({
+        username: user.username,
+        password: user.password,
+        email: user.email,
+        balance: user.balance,
+      });
       setEmail(user.email);
       // setPassword(user.password);
       setUsername(user.username);
@@ -126,25 +132,51 @@ function App() {
           <Navbar />
         </div>
         <div className='flex justify-center items-center text-xl font-bold'>
-          ALL CAMPAIGN
+          EXPLORE CAMPAIGNS
         </div>
-        <div className="flex space-x-3 mt-10 mb-10">
-          {client?.allCampaigns.map((value) => {
-            return (
-              <CampaignCard
-                key={value[0]}
-                campaignId={value[0]}
-                author={value[1].author}
-                title={value[1].title}
-                description={value[1].description}
-                targetFund={value[1].targetFund}
-                currentFund={value[1].currentFund}
-                totalParticipant={value[1].totalParticipant}
-                dueDate={value[1].dueDate.toString()}
-              />
-            );
-          })}
+        <div className="w-full flex justify-end">
+          <button onClick={() => setViewAllCampaign(!viewAllCampaign)} className="mt-3 w-fit">
+            {viewAllCampaign ? 'View less' : 'View all'}
+          </button>
         </div>
+        {viewAllCampaign ? (
+          <div className="flex flex-wrap mt-8 mb-10">
+            {client?.allCampaigns.map((value) => {
+              return (
+                <CampaignCard
+                  key={value[0]}
+                  campaignId={value[0]}
+                  author={value[1].author}
+                  title={value[1].title}
+                  description={value[1].description}
+                  targetFund={value[1].targetFund}
+                  currentFund={value[1].currentFund}
+                  totalParticipant={value[1].totalParticipant}
+                  dueDate={value[1].dueDate.toString()}
+                />
+              );
+            })}
+          </div>
+        ) : (
+          <div className="flex mt-8 mb-10">
+            {client?.allCampaigns.slice(0, 4).map((value) => {
+              return (
+                <CampaignCard
+                  key={value[0]}
+                  campaignId={value[0]}
+                  author={value[1].author}
+                  title={value[1].title}
+                  description={value[1].description}
+                  targetFund={value[1].targetFund}
+                  currentFund={value[1].currentFund}
+                  totalParticipant={value[1].totalParticipant}
+                  dueDate={value[1].dueDate.toString()}
+                />
+              );
+            })}
+          </div>
+        )}
+
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
             Get the newest campaigns in your inbox
