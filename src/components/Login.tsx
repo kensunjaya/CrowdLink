@@ -37,7 +37,6 @@ const Login = () => {
     }
 
     if (valid && email && password) {
-      alert('Registration successful!');
       handleSignIn(email, password);
       // Optionally reset form fields
       setEmail('');
@@ -61,6 +60,7 @@ const Login = () => {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
       client?.setUser(user);
+      client?.setIsLoggedIn(true);
     } else {
       alert('Wrong password');
     }
@@ -78,9 +78,8 @@ const Login = () => {
         <div className="mb-5 text-xl text-center">LOGIN</div>
         <div className="mb-1 text-xs">Email</div>
         <input
-          className={`py-1 px-3 border ${
-            emailError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${emailError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
@@ -90,9 +89,8 @@ const Login = () => {
         )}
         <div className="mb-1 text-xs">Password</div>
         <input
-          className={`py-1 px-3 border ${
-            passwordError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${passwordError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}

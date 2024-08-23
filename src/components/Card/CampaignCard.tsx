@@ -45,6 +45,10 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   // const [campaignId, setCampaignId] = useState<number>(0);
 
   const handleClick = () => {
+    if (!client?.isLoggedIn) {
+      !client?.setActivePage('login');
+      return;
+    }
     client?.setActivePage('campaign-details');
     client?.setSelectedCampaignId(campaignId);
     client?.setSelectedCampaign({
@@ -67,7 +71,7 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
     <>
       {showCard ? (
         <button
-          className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
+          className="bg-secondary m-2 hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
           onClick={handleClick}
         >
           <div className="aspect-w-16 aspect-h-10">

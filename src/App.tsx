@@ -1,12 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import './App.css';
-import { idlFactory, canisterId } from './declarations/backend';
-import { Actor, HttpAgent } from '@dfinity/agent';
-import { useQueryCall, useUpdateCall } from '@ic-reactor/react';
 import {
   getAllCampaigns,
-  getUserByEmail,
-  readAllUser,
   updateCampaign,
 } from './utils/methods';
 import { ClientContext } from './context/Context';
@@ -26,57 +21,8 @@ import Logo from './assets/crowdlink_logo.png';
 
 function App() {
   const client = useContext(ClientContext);
-  const [username, setUsername] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [users, setUsers] = useState<Users[] | []>([]);
-  const [password, setPassword] = useState<string>('');
-  const [isLoginPage, setIsLoginPage] = useState<boolean>(false);
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
-  const [showCreateCampaign, setShowCreatecampaign] = useState<boolean>(false);
+  const [viewAllCampaign, setViewAllCampaign] = useState<boolean>(false);
 
-  const agent = new HttpAgent({ host: 'http://localhost:4943' });
-  agent.fetchRootKey(); // Remove this in production
-
-  const canister = Actor.createActor(idlFactory, {
-    agent,
-    canisterId,
-  });
-
-  const handleSignIn = async (email: string, password: string) => {
-    const user = (await getUserByEmail(email)) as Users;
-    if (!user) {
-      alert('User not found');
-      return;
-    }
-    if (user.password === password) {
-      alert('Login success');
-      localStorage.setItem('auth', JSON.stringify(user));
-      client?.setUser(user);
-      setIsLoggedIn(true);
-    } else {
-      alert('Wrong password');
-    }
-  };
-
-  const handleLogOut = () => {
-    localStorage.removeItem('auth');
-    setIsLoggedIn(false);
-  };
-
-  const handleSignUp = async () => {
-    const success = await canister.createUser({
-      username: username,
-      email: email,
-      password: password,
-      balance: 0,
-    });
-    if (success) {
-      setIsLoginPage(true);
-      setEmail('');
-      setUsername('');
-      setPassword('');
-    }
-  };
 
   const handleGetCampaigns = async () => {
     const data = await getAllCampaigns() as [number, CampaignInterface][];
@@ -90,12 +36,15 @@ function App() {
 
   useEffect(() => {
     if (localStorage.getItem('auth')) {
-      setIsLoggedIn(true);
+      client?.setIsLoggedIn(true);
       const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
-      client?.setUser(user);
-      setEmail(user.email);
-      // setPassword(user.password);
-      setUsername(user.username);
+      user.balance = parseFloat(user.balance as unknown as string); // Force balance to be a number
+      client?.setUser({
+        username: user.username,
+        password: user.password,
+        email: user.email,
+        balance: user.balance,
+      });
     }
     handleGetCampaigns();
   }, []);
@@ -119,7 +68,7 @@ function App() {
         />
       )}
       <Element name='Home'>
-        <Homepage/>
+        <Homepage />
       </Element>
 
       <Element name='AboutUs'>
@@ -132,30 +81,57 @@ function App() {
           <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding. 
           Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
         </p>
-
         </div>
       </Element>
 
-      <Element name='ViewCampaigns' className='relative pt-[100px]'>
-        <div className='flex justify-center items-center text-xl font-bold -z-[2]'>
-          ALL CAMPAIGN
-        </div>
-        <div className="flex space-x-3 mt-10 mb-10 -z-[2]">
-          {client?.allCampaigns.map((value) => {
-            return (
-              <CampaignCard
-                key={value[0]}
-                campaignId={value[0]}
-                author={value[1].author}
-                title={value[1].title}
-                description={value[1].description}
-                targetFund={value[1].targetFund}
-                currentFund={value[1].currentFund}
-                totalParticipant={value[1].totalParticipant}
-                dueDate={value[1].dueDate.toString()}
-              />
-            );
-          })}
+      <Element name='ViewCampaigns' className='relative pt-[100px] items-center flex justify-center'>
+        <div className="max-w-[120vh]">
+          <div className='flex justify-center items-center text-xl font-bold'>
+            EXPLORE CAMPAIGNS
+          </div>
+          <div className="w-full flex justify-end">
+            <button onClick={() => setViewAllCampaign(!viewAllCampaign)} className="mt-3 w-fit">
+              {viewAllCampaign ? 'View less' : 'View all'}
+            </button>
+          </div>
+
+          {viewAllCampaign ? (
+            <div className="flex flex-wrap mt-8 mb-10">
+              {client?.allCampaigns.map((value) => {
+                return (
+                  <CampaignCard
+                    key={value[0]}
+                    campaignId={value[0]}
+                    author={value[1].author}
+                    title={value[1].title}
+                    description={value[1].description}
+                    targetFund={value[1].targetFund}
+                    currentFund={value[1].currentFund}
+                    totalParticipant={value[1].totalParticipant}
+                    dueDate={value[1].dueDate.toString()}
+                  />
+                );
+              })}
+            </div>
+          ) : (
+            <div className="flex mt-8 mb-10">
+              {client?.allCampaigns.slice(0, 4).map((value) => {
+                return (
+                  <CampaignCard
+                    key={value[0]}
+                    campaignId={value[0]}
+                    author={value[1].author}
+                    title={value[1].title}
+                    description={value[1].description}
+                    targetFund={value[1].targetFund}
+                    currentFund={value[1].currentFund}
+                    totalParticipant={value[1].totalParticipant}
+                    dueDate={value[1].dueDate.toString()}
+                  />
+                );
+              })}
+            </div>
+          )}
         </div>
       </Element>
         

@@ -113,3 +113,14 @@ export async function afterPayment(userId: string, campaignId: number, amount: n
     return false;
   }
 }
+
+export async function topUp(userId: string, amount: number) {
+  try {
+    await canister.topUp(userId, amount);
+    return true;
+  }
+  catch (error) {
+    console.error("Error on top up:", error);
+    return false;
+  }
+}
