@@ -1,52 +1,8 @@
-import { delay, motion } from 'framer-motion'
-import React from 'react'
+import { motion } from 'framer-motion'
 import handTop from '../assets/handtop.png';
 import handBottom from '../assets/handbottom.png';
 import { Link } from 'react-scroll';
-
-const enterLeft = {
-  before: {
-    x: -100,
-    opacity: 0,
-  },
-  after: {
-    x: 0,
-    opacity: 1,
-    transition: {
-      duration: 1,
-      staggerChildren: 0.1,
-    }
-  },
-};
-
-const enterRight = {
-  before: {
-    x: 100,
-    opacity: 0,
-  },
-  after: {
-    x: 0,
-    opacity: 1,
-    transition: {
-      duration: 1,
-      staggerChildren: 0.1,
-    }
-  },
-};
-
-const fadeIn = {
-  before: {
-      opacity: 0,
-  },
-  after: {
-      opacity: 1,
-      transition: {
-          delay: 1,
-          duration: 1,
-          staggerChildren: 0.1,
-      }
-  },
-};
+import { enterLeft, enterRight, fadeIn } from '../utils/animations';
 
 export const Homepage = () => {
   return (
