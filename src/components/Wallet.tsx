@@ -3,6 +3,7 @@ import { ClientContext } from '../context/Context';
 import { motion } from 'framer-motion';
 import seedrandom from 'seedrandom';
 import { topUp } from '../utils/methods';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const Wallet: React.FC = () => {
     const client = useContext(ClientContext);
@@ -37,6 +38,7 @@ const Wallet: React.FC = () => {
             // setBalance(balance + amount);
 
             // setAmount(');
+            client?.setIsLoading(true);
             setCardNumber('');
             setExpirationDate('');
             setCvv('');
@@ -58,7 +60,9 @@ const Wallet: React.FC = () => {
             }
             client?.setActivePage(''); // Close the modal
         } catch (error) {
-
+            console.log(error);
+        } finally {
+            client?.setIsLoading(false);
         }
     };
 
@@ -95,9 +99,14 @@ const Wallet: React.FC = () => {
 
     return (
         <div
-            className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+            className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center z-10"
             onClick={() => client?.setActivePage('')}
         >
+            {client?.isLoading && (
+                <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+                    <InfinitySpin color='#808080'/>
+                </div>
+            )};
             <motion.div
                 className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
                 initial={{ scale: 0.5 }}

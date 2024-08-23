@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { ClientContext } from '../context/Context';
 import { getUserByEmail } from '../utils/methods';
 import { Users } from '../utils/interfaces';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const Login = () => {
   const [email, setEmail] = useState<string>('');
@@ -51,7 +52,9 @@ const Login = () => {
   };
 
   const handleSignIn = async (email: string, password: string) => {
+    client?.setIsLoading(true);
     const user = (await getUserByEmail(email)) as Users;
+    client?.setIsLoading(false);
     if (!user) {
       alert('User not found');
       return;
@@ -68,9 +71,14 @@ const Login = () => {
 
   return (
     <div
-      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center z-10"
+      className="flex fixed bg-transparent w-screen h-screen items-center justify-center z-10"
       onClick={() => client?.setActivePage('')}
     >
+      {client?.isLoading && (
+          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+              <InfinitySpin color='#808080'/>
+          </div>
+      )};
       <div
         className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
         onClick={handleCardClick}
