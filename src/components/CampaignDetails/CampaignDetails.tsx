@@ -3,7 +3,7 @@ import { CampaignInterface } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
-import { afterPayment } from '../../utils/methods';
+import { afterPayment, getAllCampaigns, updateCampaign } from '../../utils/methods';
 
 interface CampaignCardProps {
   campaignId: number;
@@ -56,6 +56,7 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
       try {
         await afterPayment(client?.user?.email!, campaignId, Number(amount));
         alert('Donation success');
+        await handleGetCampaigns();
         client?.setActivePage('');
       }
       catch (error) {
@@ -75,6 +76,17 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
     const result = Math.floor((formattedDate - currentDate) / 86400);
     return result;
   };
+
+  const handleGetCampaigns = async () => {
+    const data = await getAllCampaigns() as [number, CampaignInterface][];
+    data?.forEach(async (element) => {
+      await updateCampaign(element[0], Number(element[1].dueDate) - Date.now() * 1000000);
+    });
+    const allCampaigns = await getAllCampaigns() as [number, CampaignInterface][];
+    console.log(allCampaigns);
+    client?.setAllCampaigns(allCampaigns);
+  }
+
   const [time, setTime] = useState(changeDatetime());
 
   return (
