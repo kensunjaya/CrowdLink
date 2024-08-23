@@ -2,7 +2,8 @@
 
 <i>"Redefining Crowdfunding with Blockchain"</i>
 
-<a href="https://rvh56-jyaaa-aaaal-ajura-cai.icp0.io/">Click me to open <strong>CrowdLink</strong></a>
+
+<a href="https://kinio-haaaa-aaaal-qjqta-cai.icp0.io/">Click me to open <strong>CrowdLink</strong></a>
 
 <hr>
 
