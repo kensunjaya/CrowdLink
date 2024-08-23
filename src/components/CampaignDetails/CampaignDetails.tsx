@@ -4,6 +4,7 @@ import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
 import { afterPayment } from '../../utils/methods';
+import { InfinitySpin } from 'react-loader-spinner';
 
 interface CampaignCardProps {
   campaignId: number;
@@ -54,6 +55,7 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
     }
     else {
       try {
+        client?.setIsLoading(true);
         await afterPayment(client?.user?.email!, campaignId, Number(amount));
         alert('Donation success');
         client?.setActivePage('');
@@ -62,6 +64,8 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
         console.error("Error donating:", error);
         alert('Donation failed');
         return;
+      } finally {
+        client?.setIsLoading(false);
       }
     }
   }
@@ -82,6 +86,11 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
       className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center z-10"
       onClick={() => client?.setActivePage('')}
     >
+      {client?.isLoading && (
+          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+              <InfinitySpin color='#808080'/>
+          </div>
+      )};
       <motion.div
         className="min-w-[25rem] max-w-[50rem] min-h-[20vh] flex flex-row bg-white shadow-lg rounded-md"
         initial={{ scale: 0.5 }}

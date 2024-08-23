@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { ClientContext } from '../context/Context';
 import { motion } from 'framer-motion';
 import { canister } from '../utils/canister';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const Register = () => {
   const [username, setUsername] = useState<string>('');
@@ -48,8 +49,8 @@ const Register = () => {
     }
 
     if (valid && username && email && password && confirmpassword) {
-      alert('Registration successful!');
       handleSignUp();
+      alert('Registration successful!');
       // Optionally reset form fields
       setUsername('');
       setEmail('');
@@ -65,30 +66,38 @@ const Register = () => {
   };
 
   const handleSignUp = async () => {
-    const success = await canister.createUser({
-      username: username,
-      email: email,
-      password: password,
-      balance: 0,
-    });
-    if (success) {
-      setEmail('');
-      setUsername('');
-      setPassword('');
+    try {
+      client?.setIsLoading(true);
+      const success = await canister.createUser({
+        username: username,
+        email: email,
+        password: password,
+        balance: 0,
+      });
+      if (success) {
+        setEmail('');
+        setUsername('');
+        setPassword('');
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      client?.setIsLoading(false)
     }
   };
 
   return (
     <div
-      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center z-10"
       onClick={() => client?.setActivePage('')}
     >
-      <motion.div
+      {client?.isLoading && (
+          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+              <InfinitySpin color='#808080'/>
+          </div>
+      )};
+      <div
         className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
-        initial={{ scale: 0.5 }}
-        animate={{ scale: 1 }}
-        exit={{ opacity: 0, scale: 0.5 }}
-        transition={{ type: 'spring' }}
         onClick={handleCardClick}
       >
         <div className="mb-5 text-xl text-center">REGISTER</div>
@@ -150,7 +159,7 @@ const Register = () => {
         >
           Register
         </button>
-      </motion.div>
+      </div>
     </div>
   );
 };

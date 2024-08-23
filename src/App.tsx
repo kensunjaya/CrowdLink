@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useEffect, useRef, useState } from 'react';
 import './App.css';
 import {
   getAllCampaigns,
@@ -15,14 +15,31 @@ import Wallet from './components/Wallet';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 import { Element } from 'react-scroll';
-import { motion } from 'framer-motion';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
 import { Homepage } from './sections/Homepage';
 import Logo from './assets/crowdlink_logo.png';
+
+const enterBottom = {
+  before: {
+      y: 150,
+      opacity: 0,
+  },
+  after: {
+      y: 0,
+      opacity: 1,
+      transition: {
+          duration: 1,
+          staggerChildren: 0.1,
+      }
+  },
+};
 
 function App() {
   const client = useContext(ClientContext);
   const [viewAllCampaign, setViewAllCampaign] = useState<boolean>(false);
 
+  const aboutRef = useRef(null);
+  const aboutIsInView = useInView(aboutRef, {margin:'10px'});
 
   const handleGetCampaigns = async () => {
     const data = await getAllCampaigns() as [number, CampaignInterface][];
@@ -53,7 +70,19 @@ function App() {
     <div className="w-full min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
       {client?.activePage === "register" && (<Register />)}
-      {client?.activePage === "login" && (<Login />)}
+      {client?.activePage === "login" && (
+        <div className='fixed bg-black bg-opacity-50 backdrop-blur-sm z-10 w-full h-full'>
+          <motion.div
+            initial={{ scale: 0.5 }}
+            animate={{ scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            transition={{ type: 'spring' }}
+            className='w-full min-h-screen flex flex-col items-center bg-transparent'
+          >
+            <Login />
+          </motion.div>
+        </div>
+      )}
       {client?.activePage === "wallet" && (<Wallet />)}
       {client?.activePage === 'campaign-details' && client.selectedCampaign && (
         <CampaignDetails
@@ -72,7 +101,12 @@ function App() {
       </Element>
 
       <Element name='AboutUs'>
-        <div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center ubuntu-sans">
+        <motion.div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center ubuntu-sans"
+          variants={enterBottom}
+          ref={aboutRef}
+          initial="before"
+          animate={aboutIsInView && "after"}
+        >
         <img src={Logo} alt="Logo" width={240} height={240}/>
         <p>
           <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding. 
@@ -81,7 +115,7 @@ function App() {
           <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding. 
           Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
         </p>
-        </div>
+        </motion.div>
       </Element>
 
       <Element name='ViewCampaigns' className='relative pt-[100px] items-center flex justify-center'>
