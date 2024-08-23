@@ -117,7 +117,7 @@ const Wallet: React.FC = () => {
                     value={amount}
                     onChange={handleAmountChange}
                 />
-                <div className="mb-1 mt-5">{`Paste this id to your digital wallet app`}</div>
+                <div className="mb-1 mt-5 text-xs">{`Paste this id to your digital wallet app`}</div>
                 <input className="py-1 px-3 border border-black rounded-md mb-5" value={address} disabled />
                 {error && (
                     <div className="text-red-500 text-xs mb-1">{error}</div>
