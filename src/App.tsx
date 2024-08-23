@@ -12,32 +12,14 @@ import Wallet from './components/Wallet';
 import CampaignDetails from './components/CampaignDetails/CampaignDetails';
 import { CampaignInterface, Users } from './utils/interfaces';
 import { Element } from 'react-scroll';
-import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Homepage } from './sections/Homepage';
-import Logo from './assets/crowdlink_logo.png';
 import Carousel from './components/Caroulser/Caroulser';
-
-const enterBottom = {
-  before: {
-    y: 150,
-    opacity: 0,
-  },
-  after: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 1,
-      staggerChildren: 0.1,
-    },
-  },
-};
+import { About } from './sections/About';
 
 function App() {
   const client = useContext(ClientContext);
   const [viewAllCampaign, setViewAllCampaign] = useState<boolean>(false);
-
-  const aboutRef = useRef(null);
-  const aboutIsInView = useInView(aboutRef, { margin: '10px' });
 
   const handleGetCampaigns = async () => {
     const data = (await getAllCampaigns()) as [number, CampaignInterface][];
@@ -104,42 +86,8 @@ function App() {
         <Homepage />
       </Element>
 
-      <Element name="AboutUs">
-        <motion.div
-          className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center ubuntu-sans"
-          variants={enterBottom}
-          ref={aboutRef}
-          initial="before"
-          animate={aboutIsInView && 'after'}
-        >
-          <img src={Logo} alt="Logo" width={240} height={240} />
-          <p>
-            <strong>
-              Welcome to <span>CrowdLink</span>
-            </strong>
-            , where{' '}
-            <strong>
-              <em>transparency meets innovation</em>
-            </strong>{' '}
-            in crowdfunding.
-            <strong> Powered by blockchain technology</strong>, CrowdLink
-            ensures every transaction is
-            <strong>
-              <em> secure, transparent, and immutable</em>
-            </strong>
-            . Whether you're a project creator or a backer, our platform
-            provides the
-            <strong>
-              <em> trust and accountability</em>
-            </strong>{' '}
-            you need to confidently engage in the world of crowdfunding. Join us
-            and{' '}
-            <strong>
-              <span>experience the future of fundraising</span>
-            </strong>{' '}
-            with <span>CrowdLink</span>.
-          </p>
-        </motion.div>
+      <Element name='AboutUs'>
+        <About/>
       </Element>
 
       <Element
