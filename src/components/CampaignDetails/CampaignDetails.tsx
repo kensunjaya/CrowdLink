@@ -3,7 +3,6 @@ import { CampaignInterface } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
-import { afterPayment } from '../../utils/methods';
 import { InfinitySpin } from 'react-loader-spinner';
 import { afterPayment, getAllCampaigns, updateCampaign } from '../../utils/methods';
 
