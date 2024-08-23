@@ -45,6 +45,10 @@ const CampaignCard: React.FC<CampaignCardProps> = ({
   // const [campaignId, setCampaignId] = useState<number>(0);
 
   const handleClick = () => {
+    if (!client?.isLoggedIn) {
+      !client?.setActivePage('login');
+      return;
+    }
     client?.setActivePage('campaign-details');
     client?.setSelectedCampaignId(campaignId);
     client?.setSelectedCampaign({
