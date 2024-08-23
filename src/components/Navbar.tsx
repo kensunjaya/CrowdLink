@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
                             src="../assets/crowdlink_logo.png"
                             alt="Logo"
                             className="h-6 w-6"
-                            />
+                        />
                         <span className="text-lg dm-serif-display-regular">CrowdLink</span>
                     </button>
                 </Link>
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
                     <Search />
                 </div>
 
-              {/*{client?.isLoggedIn && (
+                {/*{client?.isLoggedIn && (
                     <div className="flex-grow flex max-w-md justify-center items-center text-black">
                         {`Hello ${client?.user?.username}`}
                     </div>
@@ -46,7 +46,12 @@ const Navbar: React.FC = () => {
                         }>
                         Wallet
                     </div>
-                    <button className="px-3 py-1 border rounded-lg transition border-black text-black hover:text-white hover:bg-black" onClick={() => client?.setActivePage("create-campaign")}>
+                    <button className="px-3 py-1 border rounded-lg transition border-black text-black hover:text-white hover:bg-black" onClick={() => {
+                        if (!client?.isLoggedIn) {
+                            client?.setActivePage('login')
+                        }
+                        client?.setActivePage("create-campaign")
+                    }}>
                         Start a Campaign
                     </button>
                     {client?.isLoggedIn ? (

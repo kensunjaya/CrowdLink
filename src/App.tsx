@@ -48,7 +48,7 @@ function App() {
     }
     handleGetCampaigns();
   }, []);
-  
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
@@ -73,14 +73,14 @@ function App() {
 
       <Element name='AboutUs'>
         <div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center ubuntu-sans">
-        <img src={Logo} alt="Logo" width={240} height={240}/>
-        <p>
-          <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding. 
-          <strong> Powered by blockchain technology</strong>, CrowdLink ensures every transaction is 
-          <strong><em> secure, transparent, and immutable</em></strong>. Whether you're a project creator or a backer, our platform provides the 
-          <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding. 
-          Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
-        </p>
+          <img src={Logo} alt="Logo" width={240} height={240} />
+          <p>
+            <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding.
+            <strong> Powered by blockchain technology</strong>, CrowdLink ensures every transaction is
+            <strong><em> secure, transparent, and immutable</em></strong>. Whether you're a project creator or a backer, our platform provides the
+            <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding.
+            Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
+          </p>
         </div>
       </Element>
 
@@ -98,6 +98,12 @@ function App() {
           {viewAllCampaign ? (
             <div className="flex flex-wrap mt-8 mb-10">
               {client?.allCampaigns.map((value) => {
+                const date = new Date();
+                const currentDate = Math.floor(date.getTime() / 1000);
+                const formattedDate = Math.floor(Number(value[1].dueDate) / 1000000000);
+                if (formattedDate - currentDate < 0) {
+                  return; // passes the due date
+                }
                 return (
                   <CampaignCard
                     key={value[0]}
@@ -116,6 +122,12 @@ function App() {
           ) : (
             <div className="flex mt-8 mb-10">
               {client?.allCampaigns.slice(0, 4).map((value) => {
+                const date = new Date();
+                const currentDate = Math.floor(date.getTime() / 1000);
+                const formattedDate = Math.floor(Number(value[1].dueDate) / 1000000000);
+                if (formattedDate - currentDate < 0) {
+                  return; // passes the due date
+                }
                 return (
                   <CampaignCard
                     key={value[0]}
@@ -134,27 +146,27 @@ function App() {
           )}
         </div>
       </Element>
-        
+
       <div className="mt-[5vh] w-[60%]">
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        
+
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
-          Get the newest campaigns in your inbox
+            Get the newest campaigns in your inbox
           </div>
-        <div className='flex justify-center items-center mb-2'>
-          <input
-          className='border border-black rounded-lg p-2 w-[40%] mx-2'
-          type='textfield'
-          placeholder='Enter your email address'
-          />
-          <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
-        </div>
-        <div className='flex justify-center items-center mb-5'>
-          <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
-        </div>
+          <div className='flex justify-center items-center mb-2'>
+            <input
+              className='border border-black rounded-lg p-2 w-[40%] mx-2'
+              type='textfield'
+              placeholder='Enter your email address'
+            />
+            <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
+          </div>
+          <div className='flex justify-center items-center mb-5'>
+            <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+          </div>
         </div>
       </div>
       <Footer />
