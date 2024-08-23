@@ -1,13 +1,25 @@
 import { useContext, useEffect, useState } from 'react';
 import { CampaignInterface } from '../../utils/interfaces';
 import DefaultImage from '../../assets/morning_forest.jpg';
-import { IoIosPerson } from 'react-icons/io';
+import { RiShakeHandsFill } from "react-icons/ri";
 import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
 import { ClientContext } from '../../context/Context';
 import { motion } from 'framer-motion';
 
-const CampaignCard: React.FC<CampaignInterface> = ({
+interface CampaignCardProps {
+  campaignId: number;
+  author: string;
+  title: string;
+  description: string;
+  targetFund: number;
+  currentFund: number;
+  totalParticipant: number;
+  dueDate: string;
+}
+
+const CampaignCard: React.FC<CampaignCardProps> = ({
+  campaignId,
   author,
   title,
   description,
@@ -31,9 +43,15 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   const [descriptions, setDescriptions] = useState<string>(description);
   const client = useContext(ClientContext);
   const [showCard, setShowCard] = useState<boolean>(true);
+  // const [campaignId, setCampaignId] = useState<number>(0);
 
   const handleClick = () => {
+    if (!client?.isLoggedIn) {
+      !client?.setActivePage('login');
+      return;
+    }
     client?.setActivePage('campaign-details');
+    client?.setSelectedCampaignId(campaignId);
     client?.setSelectedCampaign({
       author,
       title,
@@ -54,7 +72,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
     <>
       {showCard ? (
         <motion.div
-          className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
+          className="bg-secondary m-2 hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
           initial={{ scale: 0.5 }}
           animate={{ scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
@@ -71,31 +89,31 @@ const CampaignCard: React.FC<CampaignInterface> = ({
           <div className="justify-between flex flex-col p-2 text-start">
             <div className="justify-between flex flex-row items-center">
               <div className="text-xl font-semibold">{title}</div>
-              <div className="flex flex-row">
-                <IoIosPerson />
-                <div className="text-xs ml-2 font-semibold">
+              <div className="flex flex-row text-md items-center justify-center">
+                <RiShakeHandsFill />
+                <div className="ml-2 font-semibold">
                   {totalParticipant}
                 </div>
               </div>
             </div>
-            <div className="text-xs font-semibold text-grays">{author}</div>
+            <div className="text-sm font-semibold text-grays">{author}</div>
             <div className="flex flex-row items-center">
               <TbClockHour4 className=" mt-1" />
-              {time === 0 ? (
+              {time > 1 ? (
                 <div className="text-sm mx-1 font-semibold ">
                   {time} days left
                 </div>
               ) : (
                 <div className="text-sm mx-1 font-semibold ">
-                  Less than 24 hours left
+                  {"Less than 24 hours left"}
                 </div>
               )}
               <BsDot className="mt-1" />
               <div className="text-sm mx-1 font-semibold ">
-                {fundPercentage}% Funded
+                {Math.round(fundPercentage)}% funded
               </div>
             </div>
-            <p className="text-xs font-normal justify-between">
+            <p className="text-sm mt-2 font-normal justify-between">
               {descriptions.length > 100
                 ? descriptions.substring(0, 100) + '...'
                 : descriptions}

@@ -14,6 +14,7 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const [activePage, setActivePage] = useState<string>('');
   const [allCampaigns, setAllCampaigns] = useState<[number, CampaignInterface][]>([]);
+  const [selectedCampaignId, setSelectedCampaignId] = useState<number>(0);
 
   const [selectedCampaign, setSelectedCampaign] = useState<CampaignInterface>({
     author: '',
@@ -35,12 +36,14 @@ export const ClientProvider: React.FC<ClientProviderProps> = ({ children }) => {
         activePage,
         allCampaigns,
         selectedCampaign,
+        selectedCampaignId,
         setUser,
         setAllUsers,
         setIsLoading,
         setIsLoggedIn,
         setActivePage,
         setSelectedCampaign,
+        setSelectedCampaignId,
         setAllCampaigns
       }}
     >

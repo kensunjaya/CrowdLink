@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import { ClientContext } from '../context/Context';
 import { getUserByEmail } from '../utils/methods';
 import { Users } from '../utils/interfaces';
+import { InfinitySpin } from 'react-loader-spinner';
 
 const Login = () => {
   const [email, setEmail] = useState<string>('');
@@ -37,7 +38,6 @@ const Login = () => {
     }
 
     if (valid && email && password) {
-      alert('Registration successful!');
       handleSignIn(email, password);
       // Optionally reset form fields
       setEmail('');
@@ -52,7 +52,9 @@ const Login = () => {
   };
 
   const handleSignIn = async (email: string, password: string) => {
+    client?.setIsLoading(true);
     const user = (await getUserByEmail(email)) as Users;
+    client?.setIsLoading(false);
     if (!user) {
       alert('User not found');
       return;
@@ -61,6 +63,7 @@ const Login = () => {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
       client?.setUser(user);
+      client?.setIsLoggedIn(true);
     } else {
       alert('Wrong password');
     }
@@ -68,9 +71,14 @@ const Login = () => {
 
   return (
     <div
-      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+      className="flex fixed bg-transparent w-screen h-screen items-center justify-center z-10"
       onClick={() => client?.setActivePage('')}
     >
+      {client?.isLoading && (
+          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+              <InfinitySpin color='#808080'/>
+          </div>
+      )};
       <div
         className="min-w-[25rem] min-h-[20vh] p-10 flex flex-col bg-white shadow-lg z-10"
         onClick={handleCardClick}
@@ -78,9 +86,8 @@ const Login = () => {
         <div className="mb-5 text-xl text-center">LOGIN</div>
         <div className="mb-1 text-xs">Email</div>
         <input
-          className={`py-1 px-3 border ${
-            emailError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${emailError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           type="email"
@@ -90,9 +97,8 @@ const Login = () => {
         )}
         <div className="mb-1 text-xs">Password</div>
         <input
-          className={`py-1 px-3 border ${
-            passwordError ? 'border-red-500' : 'border-black'
-          } rounded-md mb-1`}
+          className={`py-1 px-3 border ${passwordError ? 'border-red-500' : 'border-black'
+            } rounded-md mb-1`}
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
