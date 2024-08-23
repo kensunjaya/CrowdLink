@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import './App.css';
 import {
   getAllCampaigns,
+  getUserByEmail,
   updateCampaign,
 } from './utils/methods';
 import { ClientContext } from './context/Context';
@@ -17,7 +18,9 @@ import { CampaignInterface, Users } from './utils/interfaces';
 import { Element } from 'react-scroll';
 import { motion } from 'framer-motion';
 import { Homepage } from './sections/Homepage';
+
 import { About } from './sections/About';
+
 
 function App() {
   const client = useContext(ClientContext);
@@ -33,21 +36,19 @@ function App() {
     client?.setAllCampaigns(allCampaigns);
   }
 
+  const fetchUser = async () => {
+    const user = (await getUserByEmail(client?.user?.email!)) as Users;
+    client?.setUser(user);
+  }
+
   useEffect(() => {
     if (localStorage.getItem('auth')) {
       client?.setIsLoggedIn(true);
-      const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
-      user.balance = parseFloat(user.balance as unknown as string); // Force balance to be a number
-      client?.setUser({
-        username: user.username,
-        password: user.password,
-        email: user.email,
-        balance: user.balance,
-      });
+      fetchUser();
     }
     handleGetCampaigns();
   }, []);
-  
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
@@ -136,27 +137,27 @@ function App() {
           )}
         </div>
       </Element>
-        
+
       <div className="mt-[5vh] w-[60%]">
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        
+
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
-          Get the newest campaigns in your inbox
+            Get the newest campaigns in your inbox
           </div>
-        <div className='flex justify-center items-center mb-2'>
-          <input
-          className='border border-black rounded-lg p-2 w-[40%] mx-2'
-          type='textfield'
-          placeholder='Enter your email address'
-          />
-          <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
-        </div>
-        <div className='flex justify-center items-center mb-5'>
-          <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
-        </div>
+          <div className='flex justify-center items-center mb-2'>
+            <input
+              className='border border-black rounded-lg p-2 w-[40%] mx-2'
+              type='textfield'
+              placeholder='Enter your email address'
+            />
+            <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
+          </div>
+          <div className='flex justify-center items-center mb-5'>
+            <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+          </div>
         </div>
       </div>
       <Footer />

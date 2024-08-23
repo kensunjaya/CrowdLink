@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
-import { CampaignInterface } from '../../utils/interfaces';
+import { CampaignInterface, Users } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
 import { InfinitySpin } from 'react-loader-spinner';
-import { afterPayment, getAllCampaigns, updateCampaign } from '../../utils/methods';
+import { afterPayment, getAllCampaigns, getUserByEmail, updateCampaign } from '../../utils/methods';
 
 interface CampaignCardProps {
   campaignId: number;
@@ -58,7 +58,9 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
         client?.setIsLoading(true);
         await afterPayment(client?.user?.email!, campaignId, Number(amount));
         alert('Donation success');
+        const user = (await getUserByEmail(client?.user?.email!)) as Users;
         await handleGetCampaigns();
+        client?.setUser(user);
         client?.setActivePage('');
       }
       catch (error) {
@@ -99,9 +101,9 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
       onClick={() => client?.setActivePage('')}
     >
       {client?.isLoading && (
-          <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
-              <InfinitySpin color='#808080'/>
-          </div>
+        <div className="absolute z-20 bg-black bg-opacity-20 w-full h-full items-center justify-center flex">
+          <InfinitySpin color='#808080' />
+        </div>
       )};
       <motion.div
         className="min-w-[25rem] max-w-[50rem] min-h-[20vh] flex flex-row bg-white shadow-lg rounded-md"
