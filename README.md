@@ -1,21 +1,26 @@
-# Vite + React + Motoko
+# CrowdLink
 
-### Get started directly in your browser:
+<i>"Redefining Crowdfunding with Blockchain"</i>
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/#https://github.com/rvanasa/vite-react-motoko)
+<a href="https://rvh56-jyaaa-aaaal-ajura-cai.icp0.io/">Click me to open <strong>CrowdLink</strong></a>
 
-This template gives you everything you need to build a full-stack Web3 application on the [Internet Computer](https://internetcomputer.org/).
+<hr>
 
-For an example of a real-world dapp built using this starter project, check out the [source code](https://github.com/dfinity/feedback) for DFINITY's [Developer Experience Feedback Board](https://dx.internetcomputer.org/).
+## What is CrowdLink?
 
-## 📦 Create a New Project
+CrowdLink is a decentralized crowdfunding platform designed on the Web3, giving users full control and transparency in their fundraising efforts. By leveragin blockchain technology, CrowdLink empowers project creators to independently manage their campaigns and data, and ensures that backers stay connected and informed throughout the campaign, giving them visibility into how their contributions are being utilized, with their names are also credited in the campaigns they support, recognizing their involvement and contribution.
+
+## Why CrowdLink?
+
+CrowdLink provides users with direct access to create and manage their own campaigns, offering a level of autonomy that traditional platforms often lack. Users can independently organize and handle their data, ensuring they retain full control over every aspect of their campaign. Additionally, CrowdLink delivers complete transparency in the fundraising process, allowing users to track and verify their progress. This approach not only empowers users with greater control but also builds trust through clear and open financial management.
+
+## How to Run
 
 Make sure that [Node.js](https://nodejs.org/en/) `>= 16` and [`dfx`](https://internetcomputer.org/docs/current/developer-docs/build/install-upgrade-remove) `>= 0.14` are installed on your system.
 
-Run the following commands in a new, empty project directory:
+Run the following commands :
 
 ```sh
-npx degit rvanasa/vite-react-motoko # Download this starter project
 dfx start --clean --background # Run dfx in the background
 npm run setup # Install packages, deploy canisters, and generate type bindings
 
