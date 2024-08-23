@@ -5,6 +5,7 @@ import { IoIosPerson } from 'react-icons/io';
 import { TbClockHour4 } from 'react-icons/tb';
 import { BsDot } from 'react-icons/bs';
 import { ClientContext } from '../../context/Context';
+import { motion } from 'framer-motion';
 
 const CampaignCard: React.FC<CampaignInterface> = ({
   author,
@@ -52,8 +53,12 @@ const CampaignCard: React.FC<CampaignInterface> = ({
   return (
     <>
       {showCard ? (
-        <button
+        <motion.div
           className="bg-secondary hover:cursor-pointer w-[18rem] h-[20rem] shadow-md hover:shadow-lg transition hover:shadow-gray-500 shadow-gray-400 rounded-lg flex flex-col text-sm"
+          initial={{ scale: 0.5 }}
+          animate={{ scale: 1 }}
+          exit={{ opacity: 0, scale: 0.5 }}
+          transition={{ type: 'spring' }}
           onClick={handleClick}
         >
           <div className="aspect-w-16 aspect-h-10">
@@ -96,7 +101,7 @@ const CampaignCard: React.FC<CampaignInterface> = ({
                 : descriptions}
             </p>
           </div>
-        </button>
+        </motion.div>
       ) : null}
     </>
   );
