@@ -60,6 +60,7 @@ const Login = () => {
       alert('Login success');
       localStorage.setItem('auth', JSON.stringify(user));
       client?.setUser(user);
+      client?.setIsLoggedIn(true);
     } else {
       alert('Wrong password');
     }
