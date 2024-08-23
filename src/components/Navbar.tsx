@@ -20,7 +20,7 @@ const Navbar: React.FC = () => {
                             src="../assets/crowdlink_logo.png"
                             alt="Logo"
                             className="h-6 w-6"
-                            />
+                        />
                         <span className="text-lg dm-serif-display-regular">CrowdLink</span>
                     </button>
                 </Link>
@@ -28,7 +28,7 @@ const Navbar: React.FC = () => {
                     <Search />
                 </div>
 
-              {/*{client?.isLoggedIn && (
+                {/*{client?.isLoggedIn && (
                     <div className="flex-grow flex max-w-md justify-center items-center text-black">
                         {`Hello ${client?.user?.username}`}
                     </div>

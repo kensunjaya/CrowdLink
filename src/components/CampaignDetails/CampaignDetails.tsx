@@ -1,10 +1,10 @@
 import { useContext, useState } from 'react';
-import { CampaignInterface } from '../../utils/interfaces';
+import { CampaignInterface, Users } from '../../utils/interfaces';
 import { ClientContext } from '../../context/Context';
 import DefaultImage from '../../assets/morning_forest.jpg';
 import { motion } from 'framer-motion';
 import { InfinitySpin } from 'react-loader-spinner';
-import { afterPayment, getAllCampaigns, updateCampaign } from '../../utils/methods';
+import { afterPayment, getAllCampaigns, getUserByEmail, updateCampaign } from '../../utils/methods';
 
 interface CampaignCardProps {
   campaignId: number;
@@ -58,7 +58,9 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
         client?.setIsLoading(true);
         await afterPayment(client?.user?.email!, campaignId, Number(amount));
         alert('Donation success');
+        const user = (await getUserByEmail(client?.user?.email!)) as Users;
         await handleGetCampaigns();
+        client?.setUser(user);
         client?.setActivePage('');
       }
       catch (error) {

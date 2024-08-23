@@ -2,6 +2,7 @@ import { useContext, useEffect, useRef, useState } from 'react';
 import './App.css';
 import {
   getAllCampaigns,
+  getUserByEmail,
   updateCampaign,
 } from './utils/methods';
 import { ClientContext } from './context/Context';
@@ -21,16 +22,16 @@ import Logo from './assets/crowdlink_logo.png';
 
 const enterBottom = {
   before: {
-      y: 150,
-      opacity: 0,
+    y: 150,
+    opacity: 0,
   },
   after: {
-      y: 0,
-      opacity: 1,
-      transition: {
-          duration: 1,
-          staggerChildren: 0.1,
-      }
+    y: 0,
+    opacity: 1,
+    transition: {
+      duration: 1,
+      staggerChildren: 0.1,
+    }
   },
 };
 
@@ -39,7 +40,7 @@ function App() {
   const [viewAllCampaign, setViewAllCampaign] = useState<boolean>(false);
 
   const aboutRef = useRef(null);
-  const aboutIsInView = useInView(aboutRef, {margin:'10px'});
+  const aboutIsInView = useInView(aboutRef, { margin: '10px' });
 
   const handleGetCampaigns = async () => {
     const data = await getAllCampaigns() as [number, CampaignInterface][];
@@ -51,21 +52,19 @@ function App() {
     client?.setAllCampaigns(allCampaigns);
   }
 
+  const fetchUser = async () => {
+    const user = (await getUserByEmail(client?.user?.email!)) as Users;
+    client?.setUser(user);
+  }
+
   useEffect(() => {
     if (localStorage.getItem('auth')) {
       client?.setIsLoggedIn(true);
-      const user = JSON.parse(localStorage.getItem('auth') as string) as Users;
-      user.balance = parseFloat(user.balance as unknown as string); // Force balance to be a number
-      client?.setUser({
-        username: user.username,
-        password: user.password,
-        email: user.email,
-        balance: user.balance,
-      });
+      fetchUser();
     }
     handleGetCampaigns();
   }, []);
-  
+
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
       {client?.activePage === "create-campaign" && (<CreateCampaign />)}
@@ -107,14 +106,14 @@ function App() {
           initial="before"
           animate={aboutIsInView && "after"}
         >
-        <img src={Logo} alt="Logo" width={240} height={240}/>
-        <p>
-          <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding. 
-          <strong> Powered by blockchain technology</strong>, CrowdLink ensures every transaction is 
-          <strong><em> secure, transparent, and immutable</em></strong>. Whether you're a project creator or a backer, our platform provides the 
-          <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding. 
-          Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
-        </p>
+          <img src={Logo} alt="Logo" width={240} height={240} />
+          <p>
+            <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding.
+            <strong> Powered by blockchain technology</strong>, CrowdLink ensures every transaction is
+            <strong><em> secure, transparent, and immutable</em></strong>. Whether you're a project creator or a backer, our platform provides the
+            <strong><em> trust and accountability</em></strong> you need to confidently engage in the world of crowdfunding.
+            Join us and <strong><span>experience the future of fundraising</span></strong> with <span>CrowdLink</span>.
+          </p>
         </motion.div>
       </Element>
 
@@ -168,27 +167,27 @@ function App() {
           )}
         </div>
       </Element>
-        
+
       <div className="mt-[5vh] w-[60%]">
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
-        
+
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
-          Get the newest campaigns in your inbox
+            Get the newest campaigns in your inbox
           </div>
-        <div className='flex justify-center items-center mb-2'>
-          <input
-          className='border border-black rounded-lg p-2 w-[40%] mx-2'
-          type='textfield'
-          placeholder='Enter your email address'
-          />
-          <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
-        </div>
-        <div className='flex justify-center items-center mb-5'>
-          <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
-        </div>
+          <div className='flex justify-center items-center mb-2'>
+            <input
+              className='border border-black rounded-lg p-2 w-[40%] mx-2'
+              type='textfield'
+              placeholder='Enter your email address'
+            />
+            <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
+          </div>
+          <div className='flex justify-center items-center mb-5'>
+            <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+          </div>
         </div>
       </div>
       <Footer />
