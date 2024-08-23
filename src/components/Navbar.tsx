@@ -1,5 +1,6 @@
 import React, { useContext } from "react";
 import Search from "./Search";
+import Logo from "../assets/crowdlink_logo.png"
 import { ClientContext } from "../context/Context";
 import { Link } from "react-scroll";
 
@@ -17,36 +18,41 @@ const Navbar: React.FC = () => {
                 <Link to="Home" smooth={true} duration={1000}>
                     <button className="flex items-center space-x-2">
                         <img
-                            src="../assets/crowdlink_logo.png"
+                            src={Logo}
                             alt="Logo"
                             className="h-6 w-6"
-                            />
+                        />
                         <span className="text-lg dm-serif-display-regular">CrowdLink</span>
                     </button>
                 </Link>
-                <div className="flex-grow flex max-w-md justify-center items-center">
-                    <Search />
-                </div>
 
-              {/*{client?.isLoggedIn && (
+                {client?.isLoggedIn && (
                     <div className="flex-grow flex max-w-md justify-center items-center text-black">
-                        {`Hello ${client?.user?.username}`}
+                        {`Welcome back, ${client?.user?.username}!`}
                     </div>
                 )}
-              */}
+
 
                 <div className="flex items-center space-x-4">
                     <div className="cursor-pointer px-3 py-1 border rounded-lg border-none text-black hover:text-gray-600 transition"
                         onClick={() => {
                             if (!client?.isLoggedIn) {
-                                client?.setActivePage('login')
+                                client?.setActivePage('login');
+                                return;
                             }
                             client?.setActivePage("wallet")
                         }
                         }>
                         Wallet
                     </div>
-                    <button className="px-3 py-1 border rounded-lg transition border-black text-black hover:text-white hover:bg-black" onClick={() => client?.setActivePage("create-campaign")}>
+                    <button className="px-3 py-1 border rounded-lg transition border-black text-black hover:text-white hover:bg-black" onClick={() => {
+                        if (!client?.isLoggedIn) {
+                            client?.setActivePage('login');
+                            return;
+                        }
+                        client?.setActivePage("create-campaign");
+
+                    }}>
                         Start a Campaign
                     </button>
                     {client?.isLoggedIn ? (
