@@ -99,15 +99,31 @@ function App() {
     }
     handleGetCampaigns();
   }, []);
-
+  
   return (
     <div className="w-full min-h-screen flex flex-col items-center">
+      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
+      {client?.activePage === "register" && (<Register />)}
+      {client?.activePage === "login" && (<Login />)}
+      {client?.activePage === "wallet" && (<Wallet />)}
+      {client?.activePage === 'campaign-details' && client.selectedCampaign && (
+        <CampaignDetails
+          campaignId={client.selectedCampaignId}
+          author={client.selectedCampaign.author}
+          title={client.selectedCampaign.title}
+          description={client.selectedCampaign.description}
+          targetFund={client.selectedCampaign.targetFund}
+          currentFund={client.selectedCampaign.currentFund}
+          totalParticipant={client.selectedCampaign.totalParticipant}
+          dueDate={client.selectedCampaign.dueDate}
+        />
+      )}
       <Element name='Home'>
         <Homepage/>
       </Element>
 
       <Element name='AboutUs'>
-        <div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center">
+        <div className="flex flex-row justify-center mt-[18vh] mx-[40vh] text-lg text-black text-justify items-center ubuntu-sans">
         <img src={Logo} alt="Logo" width={240} height={240}/>
         <p>
           <strong>Welcome to <span>CrowdLink</span></strong>, where <strong><em>transparency meets innovation</em></strong> in crowdfunding. 
@@ -121,10 +137,10 @@ function App() {
       </Element>
 
       <Element name='ViewCampaigns' className='relative pt-[100px]'>
-        <div className='flex justify-center items-center text-xl font-bold'>
+        <div className='flex justify-center items-center text-xl font-bold -z-[2]'>
           ALL CAMPAIGN
         </div>
-        <div className="flex space-x-3 mt-10 mb-10">
+        <div className="flex space-x-3 mt-10 mb-10 -z-[2]">
           {client?.allCampaigns.map((value) => {
             return (
               <CampaignCard
@@ -142,124 +158,28 @@ function App() {
           })}
         </div>
       </Element>
-      {client?.activePage === "create-campaign" && (<CreateCampaign />)}
-      {client?.activePage === "register" && (<Register />)}
-      {client?.activePage === "login" && (<Login />)}
-      {client?.activePage === "wallet" && (<Wallet />)}
-      {client?.activePage === 'campaign-details' && client.selectedCampaign && (
-        <CampaignDetails
-          campaignId={client.selectedCampaignId}
-          author={client.selectedCampaign.author}
-          title={client.selectedCampaign.title}
-          description={client.selectedCampaign.description}
-          targetFund={client.selectedCampaign.targetFund}
-          currentFund={client.selectedCampaign.currentFund}
-          totalParticipant={client.selectedCampaign.totalParticipant}
-          dueDate={client.selectedCampaign.dueDate}
-        />
-      )}
+        
       <div className="mt-[5vh] w-[60%]">
         <div className="flex flex-col space-y-5">
           <Navbar />
         </div>
+        
         <div className='bg-gray-300 rounded-lg p-5 m-5'>
           <div className='flex justify-center items-center text-2xl font-bold mb-5'>
-            Get the newest campaigns in your inbox
+          Get the newest campaigns in your inbox
           </div>
-          <div className='flex justify-center items-center mb-2'>
-            <input
-              className='border border-black rounded-lg p-2 w-[40%] mx-2'
-              type='textfield'
-              placeholder='Enter your email address'
-            />
-            <button className='bg-black text-white p-2 rounded-lg'>Sign Me Up</button>
-          </div>
-          <div className='flex justify-center items-center mb-5'>
-            <h6>By clicking “Sign me up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
-          </div>
+        <div className='flex justify-center items-center mb-2'>
+          <input
+          className='border border-black rounded-lg p-2 w-[40%] mx-2'
+          type='textfield'
+          placeholder='Enter your email address'
+          />
+          <button className='bg-black text-white p-2 rounded-lg'>Sign Up</button>
         </div>
-        {isLoggedIn && (
-          <div className="flex flex-col space-y-5 mt-[8rem]">
-            <div className="text-3xl">Welcome {username}</div>
-            <button
-              className="bg-black text-white w-fit p-2 rounded-lg"
-              onClick={() => handleLogOut()}
-            >
-              Logout
-            </button>
-          </div>
-        )}
-        {!isLoggedIn && (
-          <div className="flex flex-col space-y-3 mb-5">
-            {isLoginPage && (
-              <>
-                <input
-                  placeholder="email"
-                  className="py-1 px-3 border border-black rounded-md"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                  placeholder="password"
-                  className="py-1 px-3 border border-black rounded-md"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  className="bg-black text-white w-fit p-2 rounded-lg"
-                  onClick={() => handleSignIn(email, password)}
-                >
-                  Sign In
-                </button>
-              </>
-            )}
-            {!isLoginPage && (
-              <>
-                <input
-                  placeholder="username"
-                  className="py-1 px-3 border border-black rounded-md"
-                  type="text"
-                  value={username}
-                  onChange={(e) => setUsername(e.target.value)}
-                />
-                <input
-                  placeholder="email"
-                  className="py-1 px-3 border border-black rounded-md"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <input
-                  placeholder="password"
-                  className="py-1 px-3 border border-black rounded-md"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <button
-                  className="bg-black text-white w-fit p-2 rounded-lg"
-                  onClick={handleSignUp}
-                >
-                  Sign Up
-                </button>
-              </>
-            )}
-            <button
-              className="bg-black text-white w-fit p-2 rounded-lg"
-              onClick={async () => {
-                const value = await readAllUser();
-                console.log('user: ', client);
-                client?.setAllUsers(value);
-                setUsers((value as Users[]) ?? []);
-                console.log(client?.allUsers);
-              }}
-            >
-              Refetch users
-            </button>
-          </div>
-        )}
+        <div className='flex justify-center items-center mb-5'>
+          <h6>By clicking “Sign up” I have read and agree to CrowdLink's Terms of Use and Privacy Policy .</h6>
+        </div>
+        </div>
       </div>
       <Footer />
     </div>

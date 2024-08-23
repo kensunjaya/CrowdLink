@@ -56,6 +56,7 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
       try {
         await afterPayment(client?.user?.email!, campaignId, Number(amount));
         alert('Donation success');
+        client?.setActivePage('');
       }
       catch (error) {
         console.error("Error donating:", error);
@@ -78,7 +79,7 @@ const CampaignDetails: React.FC<CampaignCardProps> = ({
 
   return (
     <div
-      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center"
+      className="flex fixed bg-black bg-opacity-50 w-screen h-screen backdrop-blur-sm items-center justify-center z-10"
       onClick={() => client?.setActivePage('')}
     >
       <motion.div

@@ -8,15 +8,16 @@ const Navbar: React.FC = () => {
     return (
         <nav className="bg-white shadow-md fixed top-5 left-20 right-20 z-50 rounded-lg">
             <div className="container mx-auto px-3 py-2 flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                    <img
-                        src="../assets/crowdlink_logo.png"
-                        alt="Logo"
-                        className="h-6 w-6"
-                    />
-                    <span className="text-lg font-bold">CrowdLink</span>
-                </div>
-
+                <Link to="Home" smooth={true} duration={1000}>
+                    <button className="flex items-center space-x-2">
+                        <img
+                            src="../assets/crowdlink_logo.png"
+                            alt="Logo"
+                            className="h-6 w-6"
+                            />
+                        <span className="text-lg dm-serif-display-regular">CrowdLink</span>
+                    </button>
+                </Link>
                 <div className="flex-grow flex max-w-md justify-center items-center">
                     <Search />
                 </div>
